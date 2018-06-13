@@ -13,6 +13,12 @@ import {
 } from 'react-native';
 import HomePage from './components/HomePage/HomePage'
 import {createStackNavigator} from 'react-navigation'
+import {createStore, applyMiddleware} from 'redux'
+import thunk from 'redux-thunk'
+import {Provider} from 'react-redux'
+import postReducer from './redux/reducers/postReducer'
+
+const createStoreWithMiddleWare = applyMiddleware(thunk)(createStore)
 
 const RootStack = createStackNavigator({
   Home : HomePage
@@ -25,7 +31,9 @@ const RootStack = createStackNavigator({
 export default class App extends Component {
   render() {
     return (
-        <RootStack/>
+        <Provider store = {createStoreWithMiddleWare(postReducer)}>
+          <RootStack/>
+        </Provider>
     );
   }
 }
