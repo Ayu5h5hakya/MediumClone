@@ -12,6 +12,7 @@ import {
   View
 } from 'react-native';
 import HomePage from './components/HomePage/HomePage'
+import DetailPage from './components/DetailPage/DetailPage'
 import {createStackNavigator} from 'react-navigation'
 import {createStore, applyMiddleware} from 'redux'
 import thunk from 'redux-thunk'
@@ -21,7 +22,8 @@ import postReducer from './redux/reducers/postReducer'
 const createStoreWithMiddleWare = applyMiddleware(thunk)(createStore)
 
 const RootStack = createStackNavigator({
-  Home : HomePage
+  Home : HomePage,
+  Detail : DetailPage
 },{
   navigationOptions : {
     title :'Medium'

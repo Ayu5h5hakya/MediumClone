@@ -6,6 +6,7 @@ import {
   FlatList,
   RefreshControl,
   Alert,
+  TouchableOpacity,
   View
 } from 'react-native'
 import {connect} from 'react-redux'
@@ -22,10 +23,13 @@ class HomePage extends Component{
     _renderItem = child => {
         
         return (
-            <View style={styles.childContainerStyle}>
-                <Text style={styles.postTitleStyle}>{child.item.title}</Text>
-                <Text>{child.item.description}</Text>
-            </View>
+            <TouchableOpacity 
+            onPress={this._onChildClick}>
+                <View style={styles.childContainerStyle}>
+                    <Text style={styles.postTitleStyle}>{child.item.title}</Text>
+                    <Text>{child.item.description}</Text>
+                </View>
+            </TouchableOpacity>
         )
     }
 
@@ -33,6 +37,12 @@ class HomePage extends Component{
 
     _onRefresh(){
         this.props.fetchPosts()
+    }
+
+    _onChildClick = (index) => {
+        this.props.navigation.navigate('Detail',{
+            id : index
+        })
     }
 
     componentDidMount(){
@@ -43,7 +53,6 @@ class HomePage extends Component{
     render(){
         return(
             <FlatList
-                style={styles.flatListStyle}
                 data={this.props.posts.posts}
                 renderItem = {this._renderItem}
                 keyExtractor = {this._keyExtractor}
