@@ -1,31 +1,30 @@
-import {FETCHING_POST_REQUEST, FETCHING_POST_SUCCESS, FETCHING_POST_FAILURE} from './types'
+import {FETCHING_DETAILS_REQUEST, FETCHING_DETAILS_SUCCESS, FETCHING_DETAILS_FAILURE} from './types'
 
-export const fetchPostsAction = () => {
+export const fetchDetailsAction = () => {
     return {
-        type : FETCHING_POST_REQUEST
+        type : FETCHING_DETAILS_REQUEST
     }
 }
 
 export const postSuccessAction = (data) => {
     return {
-        type : FETCHING_POST_SUCCESS,
+        type : FETCHING_DETAILS_SUCCESS,
         payload : data
     }
 }
 
 export const postFailureAction = (error) => {
     return {
-        type : FETCHING_POST_FAILURE,
+        type : FETCHING_DETAILS_FAILURE,
         errorMessage : error
     }
 }
 
-export default fetchPosts = () => {
+export default fetchDetails = () => {
     return async dispatch => {
-        console.log("drggdfgager")
-        dispatch(fetchPostsAction())
+        dispatch(fetchDetailsAction())
         try{
-            let response = await fetch('http://192.168.100.4:3000/data')
+            let response = await fetch('http://192.168.100.4:3000/detail')
             let json = await response.json()
             console.log(json)
             dispatch(postSuccessAction(json))

@@ -1,12 +1,19 @@
 import {StyleSheet} from 'react-native'
 
 export default styles = StyleSheet.create({
-    childContainerStyle : {
+    bodyStyle : {
         padding : 10,
         margin : 2,
         backgroundColor : '#ffffff'
     },
-    postTitleStyle : {
+    dateStyle : {
         fontWeight : 'bold'
+    },
+    authorStyle : {
+        fontWeight : 'bold',
+        margin : 5
+    },
+    viewStyle : {
+        margin : 5
     }
 })

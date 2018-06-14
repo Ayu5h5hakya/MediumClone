@@ -24,7 +24,7 @@ class HomePage extends Component{
         
         return (
             <TouchableOpacity 
-            onPress={this._onChildClick}>
+            onPress={() => this._onChildClick(child)}>
                 <View style={styles.childContainerStyle}>
                     <Text style={styles.postTitleStyle}>{child.item.title}</Text>
                     <Text>{child.item.description}</Text>
@@ -39,9 +39,9 @@ class HomePage extends Component{
         this.props.fetchPosts()
     }
 
-    _onChildClick = (index) => {
+    _onChildClick = (child) => {
         this.props.navigation.navigate('Detail',{
-            id : index
+            id : child
         })
     }
 
@@ -72,7 +72,7 @@ class HomePage extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        posts : state
+        posts : state.Post
     }
 }
 
