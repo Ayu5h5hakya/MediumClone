@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import HomePage from './components/HomePage/HomePage'
 import DetailPage from './components/DetailPage/DetailPage'
-import {createStackNavigator} from 'react-navigation'
+import {createStackNavigator, createBottomTabNavigator} from 'react-navigation'
 import {createStore, applyMiddleware, combineReducers} from 'redux'
 import thunk from 'redux-thunk'
 import {Provider} from 'react-redux'
@@ -27,20 +27,35 @@ const reducers = combineReducers({
   Detail : detailReducer
 })
 
-const RootStack = createStackNavigator({
+const NewStack = createStackNavigator({
+  Home : HomePage,
+  Detail : DetailPage
+},{
+  initialRouteName : 'Home',
+  navigationOptions : {
+    title :'Medium'
+  }
+})
+
+const ArchiveStack = createStackNavigator({
   Home : HomePage,
   Detail : DetailPage
 },{
   navigationOptions : {
-    title :'Medium'
+    title : 'Archive'
   }
+})
+
+const RootStack = createBottomTabNavigator({
+  New : NewStack,
+  Archive : ArchiveStack
 })
 
 export default class App extends Component {
   render() {
     return (
         <Provider store = {createStoreWithMiddleWare(reducers)}>
-          <RootStack/>
+          <NewStack/>
         </Provider>
     );
   }

@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import {
   Text,
-  Alert,
-  TouchableOpacity,
+  Button,
+  ActivityIndicator,
   View
 } from 'react-native'
 import styles from './styles'
 import {connect} from 'react-redux'
-import fetchDetails from '../../redux/actions/detailActions'
+import {fetchDetails, saveDetails} from '../../redux/actions/detailActions'
 
 class DetailPage extends Component{
 
@@ -19,21 +19,39 @@ class DetailPage extends Component{
 
     constructor(props){
         super(props)
+        this.onArticleSave = this.onArticleSave.bind(this)
     }
 
     componentDidMount(){
-        this.props.fetchDetails()
+        const {navigation} = this.props
+        this.props.fetchDetails(navigation.getParam('id', 0).item.id)
+    }
+
+    onArticleSave(){
+        this.props.saveDetails(this.props.details.body[0])
     }
 
     render(){
 
+        let content = <ActivityIndicator size="large"/>
+
+        if(this.props.details.body.length > 0){
+            content = <View>
+            <Text style={styles.dateStyle}>{this.props.details.body[0].dateCreated}</Text>
+            <Text style={styles.bodyStyle}>{this.props.details.body[0].body}</Text>
+            <Text style={styles.authorStyle}>{this.props.details.body[0].author}</Text>
+            <Text style={styles.viewStyle}>{this.props.details.body[0].views}</Text>
+            <Text style={styles.viewStyle}>{this.props.details.body[0].likes}</Text>
+            <Button
+                title="Save"
+                onPress={this.onArticleSave}
+            />
+        </View>
+        }
+
         return(
             <View>
-                <Text style={styles.dateStyle}>{this.props.details.body.dateCreated}</Text>
-                <Text style={styles.bodyStyle}>{this.props.details.body.body}</Text>
-                <Text style={styles.authorStyle}>{this.props.details.body.author}</Text>
-                <Text style={styles.viewStyle}>{this.props.details.body.views}</Text>
-                <Text style={styles.viewStyle}>{this.props.details.body.likes}</Text>
+                {content}
             </View>
         )
     }
@@ -46,4 +64,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, {fetchDetails})(DetailPage)
+export default connect(mapStateToProps, {fetchDetails, saveDetails})(DetailPage)

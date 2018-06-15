@@ -15846,7 +15846,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
     self.fetch.polyfill = true;
   })(typeof self !== 'undefined' ? self : this);
-},56,[],"node_modules\\react-native\\node_modules\\whatwg-fetch\\fetch.js");
+},56,[],"node_modules\\whatwg-fetch\\fetch.js");
 __d(function (global, _require2, module, exports, _dependencyMap) {
   'use strict';
 
@@ -16676,7 +16676,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }
 
   module.exports = prettyFormat;
-},65,[66],"node_modules\\pretty-format\\index.js");
+},65,[66],"node_modules\\react-native\\node_modules\\pretty-format\\index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   'use strict';
 
@@ -16685,7 +16685,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = function printString(val) {
     return val.replace(ESCAPED_CHARACTERS, '\\$1');
   };
-},66,[],"node_modules\\pretty-format\\printString.js");
+},66,[],"node_modules\\react-native\\node_modules\\pretty-format\\printString.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   !function (global) {
     "use strict";
@@ -18560,7 +18560,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
     return parts.join('');
   }
-},78,[],"node_modules\\base64-js\\index.js");
+},78,[],"node_modules\\react-native\\node_modules\\base64-js\\index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   'use strict';
 
@@ -61294,6 +61294,10 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   var _postReducer2 = _interopRequireDefault(_postReducer);
 
+  var _detailReducer = _require(_dependencyMap[10], "./redux/reducers/detailReducer");
+
+  var _detailReducer2 = _interopRequireDefault(_detailReducer);
+
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -61322,13 +61326,30 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }
 
   var createStoreWithMiddleWare = (0, _redux.applyMiddleware)(_reduxThunk2.default)(_redux.createStore);
-  var RootStack = (0, _reactNavigation.createStackNavigator)({
+  var reducers = (0, _redux.combineReducers)({
+    Post: _postReducer2.default,
+    Detail: _detailReducer2.default
+  });
+  var NewStack = (0, _reactNavigation.createStackNavigator)({
+    Home: _HomePage2.default,
+    Detail: _DetailPage2.default
+  }, {
+    initialRouteName: 'Home',
+    navigationOptions: {
+      title: 'Medium'
+    }
+  });
+  var ArchiveStack = (0, _reactNavigation.createStackNavigator)({
     Home: _HomePage2.default,
     Detail: _DetailPage2.default
   }, {
     navigationOptions: {
-      title: 'Medium'
+      title: 'Archive'
     }
+  });
+  var RootStack = (0, _reactNavigation.createBottomTabNavigator)({
+    New: NewStack,
+    Archive: ArchiveStack
   });
 
   var App = _wrapComponent("App")(function (_Component) {
@@ -61346,16 +61367,16 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         return _react3.default.createElement(
           _reactRedux.Provider,
           {
-            store: createStoreWithMiddleWare(_postReducer2.default),
+            store: createStoreWithMiddleWare(reducers),
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 36
+              lineNumber: 57
             }
           },
-          _react3.default.createElement(RootStack, {
+          _react3.default.createElement(NewStack, {
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 37
+              lineNumber: 58
             }
           })
         );
@@ -61366,7 +61387,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }(_react2.Component));
 
   exports.default = App;
-},491,[118,179,12,492,518,520,504,630,493,631],"src\\App.js");
+},491,[118,179,12,492,518,546,504,656,493,657,658],"src\\App.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
     Object.defineProperty(exports, "__esModule", {
         value: true
@@ -61435,7 +61456,9 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 return _react3.default.createElement(
                     _reactNative.TouchableOpacity,
                     {
-                        onPress: _this._onChildClick,
+                        onPress: function onPress() {
+                            return _this._onChildClick(child);
+                        },
                         __source: {
                             fileName: _jsxFileName,
                             lineNumber: 26
@@ -61479,9 +61502,9 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 return item.title;
             };
 
-            _this._onChildClick = function (index) {
+            _this._onChildClick = function (child) {
                 _this.props.navigation.navigate('Detail', {
-                    id: index
+                    id: child
                 });
             };
 
@@ -61530,7 +61553,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
     var mapStateToProps = function mapStateToProps(state) {
         return {
-            posts: state
+            posts: state.Post
         };
     };
 
@@ -63351,6 +63374,9 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   var FETCHING_POST_REQUEST = exports.FETCHING_POST_REQUEST = 'FETCHING_POST_REQUEST';
   var FETCHING_POST_SUCCESS = exports.FETCHING_POST_SUCCESS = 'FETCHING_POST_SUCCESS';
   var FETCHING_POST_FAILURE = exports.FETCHING_POST_FAILURE = 'FETCHING_POST_FAILURE';
+  var FETCHING_DETAILS_REQUEST = exports.FETCHING_DETAILS_REQUEST = 'FETCHING_DETAILS_REQUEST';
+  var FETCHING_DETAILS_SUCCESS = exports.FETCHING_DETAILS_SUCCESS = 'FETCHING_DETAILS_SUCCESS';
+  var FETCHING_DETAILS_FAILURE = exports.FETCHING_DETAILS_FAILURE = 'FETCHING_DETAILS_FAILURE';
 },516,[],"src\\redux\\actions\\types.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
     Object.defineProperty(exports, "__esModule", {
@@ -63383,15 +63409,21 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
     var _index2 = _interopRequireDefault(_index);
 
-    var _jsxFileName = "D:\\React Native\\MediumClone\\src\\components\\DetailPage\\DetailPage.js";
-
     var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+    var _class,
+        _temp,
+        _jsxFileName = "D:\\React Native\\MediumClone\\src\\components\\DetailPage\\DetailPage.js";
 
     var _reactNative = _require(_dependencyMap[2], "react-native");
 
     var _styles = _require(_dependencyMap[3], "./styles");
 
     var _styles2 = _interopRequireDefault(_styles);
+
+    var _reactRedux = _require(_dependencyMap[4], "react-redux");
+
+    var _detailActions = _require(_dependencyMap[5], "../../redux/actions/detailActions");
 
     function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -63420,47 +63452,147 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         };
     }
 
-    var DetailPage = _wrapComponent("DetailPage")(function (_Component) {
+    var DetailPage = _wrapComponent("DetailPage")((_temp = _class = function (_Component) {
         _inherits(DetailPage, _Component);
 
         function DetailPage(props) {
             _classCallCheck(this, DetailPage);
 
-            return _possibleConstructorReturn(this, (DetailPage.__proto__ || Object.getPrototypeOf(DetailPage)).call(this, props));
+            var _this = _possibleConstructorReturn(this, (DetailPage.__proto__ || Object.getPrototypeOf(DetailPage)).call(this, props));
+
+            _this.onArticleSave = _this.onArticleSave.bind(_this);
+            return _this;
         }
 
         _createClass(DetailPage, [{
+            key: "componentDidMount",
+            value: function componentDidMount() {
+                var navigation = this.props.navigation;
+                this.props.fetchDetails(navigation.getParam('id', 0).item.id);
+            }
+        }, {
+            key: "onArticleSave",
+            value: function onArticleSave() {
+                this.props.saveDetails(this.props.details.body);
+            }
+        }, {
             key: "render",
             value: function render() {
-                var navigation = this.props.navigation;
-                var itemId = navigation.getParam('id', 0);
+                var content = _react3.default.createElement(_reactNative.ActivityIndicator, {
+                    size: "large",
+                    __source: {
+                        fileName: _jsxFileName,
+                        lineNumber: 36
+                    }
+                });
+
+                if (this.props.details.body.length > 0) {
+                    content = _react3.default.createElement(
+                        _reactNative.View,
+                        {
+                            __source: {
+                                fileName: _jsxFileName,
+                                lineNumber: 39
+                            }
+                        },
+                        _react3.default.createElement(
+                            _reactNative.Text,
+                            {
+                                style: _styles2.default.dateStyle,
+                                __source: {
+                                    fileName: _jsxFileName,
+                                    lineNumber: 40
+                                }
+                            },
+                            this.props.details.body[0].dateCreated
+                        ),
+                        _react3.default.createElement(
+                            _reactNative.Text,
+                            {
+                                style: _styles2.default.bodyStyle,
+                                __source: {
+                                    fileName: _jsxFileName,
+                                    lineNumber: 41
+                                }
+                            },
+                            this.props.details.body[0].body
+                        ),
+                        _react3.default.createElement(
+                            _reactNative.Text,
+                            {
+                                style: _styles2.default.authorStyle,
+                                __source: {
+                                    fileName: _jsxFileName,
+                                    lineNumber: 42
+                                }
+                            },
+                            this.props.details.body[0].author
+                        ),
+                        _react3.default.createElement(
+                            _reactNative.Text,
+                            {
+                                style: _styles2.default.viewStyle,
+                                __source: {
+                                    fileName: _jsxFileName,
+                                    lineNumber: 43
+                                }
+                            },
+                            this.props.details.body[0].views
+                        ),
+                        _react3.default.createElement(
+                            _reactNative.Text,
+                            {
+                                style: _styles2.default.viewStyle,
+                                __source: {
+                                    fileName: _jsxFileName,
+                                    lineNumber: 44
+                                }
+                            },
+                            this.props.details.body[0].likes
+                        ),
+                        _react3.default.createElement(_reactNative.Button, {
+                            title: "Save",
+                            onPress: this.onArticleSave,
+                            __source: {
+                                fileName: _jsxFileName,
+                                lineNumber: 45
+                            }
+                        })
+                    );
+                }
+
                 return _react3.default.createElement(
                     _reactNative.View,
                     {
                         __source: {
                             fileName: _jsxFileName,
-                            lineNumber: 21
+                            lineNumber: 53
                         }
                     },
-                    _react3.default.createElement(
-                        _reactNative.Text,
-                        {
-                            __source: {
-                                fileName: _jsxFileName,
-                                lineNumber: 22
-                            }
-                        },
-                        itemId
-                    )
+                    content
                 );
             }
         }]);
 
         return DetailPage;
-    }(_react2.Component));
+    }(_react2.Component), _class.navigationOptions = function (_ref) {
+        var navigation = _ref.navigation;
+        return {
+            title: navigation.getParam('id', 0).item.title
+        };
+    }, _temp));
 
-    exports.default = DetailPage;
-},518,[118,179,12,519],"src\\components\\DetailPage\\DetailPage.js");
+    var mapStateToProps = function mapStateToProps(state) {
+        return {
+            details: state.Detail
+        };
+    };
+
+    exports.default = (0, _reactRedux.connect)(mapStateToProps, {
+        fetchDetails: _detailActions.fetchDetails,
+        saveDetails: _detailActions.saveDetails
+    })(DetailPage);
+},518,[118,179,12,519,493,520],"src\\components\\DetailPage\\DetailPage.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
     Object.defineProperty(exports, "__esModule", {
         value: true
@@ -63469,16 +63601,3272 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     var _reactNative = _require(_dependencyMap[0], "react-native");
 
     exports.default = styles = _reactNative.StyleSheet.create({
-        childContainerStyle: {
+        bodyStyle: {
             padding: 10,
             margin: 2,
             backgroundColor: '#ffffff'
         },
-        postTitleStyle: {
+        dateStyle: {
             fontWeight: 'bold'
+        },
+        authorStyle: {
+            fontWeight: 'bold',
+            margin: 5
+        },
+        viewStyle: {
+            margin: 5
         }
     });
 },519,[12],"src\\components\\DetailPage\\styles.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.saveDetails = exports.fetchDetails = exports.postFailureAction = exports.postSuccessAction = exports.fetchDetailsAction = undefined;
+
+    var _this = this;
+
+    var _types = _require(_dependencyMap[0], "./types");
+
+    var _realm = _require(_dependencyMap[1], "../../components/RealmPage/realm");
+
+    var _realm2 = _interopRequireDefault(_realm);
+
+    function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+    var fetchDetailsAction = exports.fetchDetailsAction = function fetchDetailsAction() {
+        return {
+            type: _types.FETCHING_DETAILS_REQUEST
+        };
+    };
+
+    var postSuccessAction = exports.postSuccessAction = function postSuccessAction(data) {
+        return {
+            type: _types.FETCHING_DETAILS_SUCCESS,
+            payload: data
+        };
+    };
+
+    var postFailureAction = exports.postFailureAction = function postFailureAction(error) {
+        return {
+            type: _types.FETCHING_DETAILS_FAILURE,
+            errorMessage: error
+        };
+    };
+
+    var fetchDetails = exports.fetchDetails = function fetchDetails(id) {
+        var posts = _realm2.default.objects('Post');
+
+        var postMatchingId = posts.filtered('postId = ' + id);
+
+        if (postMatchingId.length > 0) {
+            var matchingPost = postMatchingId[0];
+            console.log(matchingPost);
+            dispatch(postSuccessAction(matchingPost));
+        } else {
+            return function _callee(dispatch) {
+                var response, json;
+                return regeneratorRuntime.async(function _callee$(_context) {
+                    while (1) {
+                        switch (_context.prev = _context.next) {
+                            case 0:
+                                dispatch(fetchDetailsAction());
+                                _context.prev = 1;
+                                _context.next = 4;
+                                return regeneratorRuntime.awrap(fetch('http://192.168.100.4:3000/detail?id=' + id));
+
+                            case 4:
+                                response = _context.sent;
+                                _context.next = 7;
+                                return regeneratorRuntime.awrap(response.json());
+
+                            case 7:
+                                json = _context.sent;
+                                console.log(json);
+                                dispatch(postSuccessAction(json));
+                                _context.next = 16;
+                                break;
+
+                            case 12:
+                                _context.prev = 12;
+                                _context.t0 = _context["catch"](1);
+                                console.log(_context.t0);
+                                dispatch(postFailureAction(_context.t0));
+
+                            case 16:
+                            case "end":
+                                return _context.stop();
+                        }
+                    }
+                }, null, _this, [[1, 12]]);
+            };
+        }
+    };
+
+    var saveDetails = exports.saveDetails = function saveDetails(post) {
+        _realm2.default.write(function () {
+            _realm2.default.create('Post', {
+                postId: post.id,
+                title: post.title,
+                body: post.body,
+                author: post.author,
+                views: post.views,
+                likes: post.likes
+            });
+        });
+    };
+},520,[516,522],"src\\redux\\actions\\detailActions.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _realm = _require(_dependencyMap[0], "realm");
+
+    var _realm2 = _interopRequireDefault(_realm);
+
+    function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+    function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+    function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+    var Post = function (_Realm$Object) {
+        _inherits(Post, _Realm$Object);
+
+        function Post() {
+            _classCallCheck(this, Post);
+
+            return _possibleConstructorReturn(this, (Post.__proto__ || Object.getPrototypeOf(Post)).apply(this, arguments));
+        }
+
+        return Post;
+    }(_realm2.default.Object);
+
+    Post.schema = {
+        name: 'Post',
+        primarykey: 'postId',
+        properties: {
+            postId: {
+                type: 'int'
+            },
+            title: 'string',
+            body: 'string',
+            author: 'string',
+            views: 'int',
+            likes: 'int'
+        }
+    };
+    exports.default = new _realm2.default({
+        schema: [Post]
+    });
+},522,[523],"src\\components\\RealmPage\\realm.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    var require_method = _require;
+
+    function nodeRequire(module) {
+        return require_method(module);
+    }
+
+    function getContext() {
+        if (typeof process === 'object' && process + '' === '[object process]') {
+            if (typeof global !== 'undefined' && global.__debug__) {
+                return 'vscodedebugger';
+            }
+
+            return process.type === 'renderer' ? 'electron' : 'nodejs';
+        }
+
+        if (typeof jest === 'object') {
+            return 'nodejs';
+        }
+
+        if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
+            if (typeof navigator !== 'undefined' && /Chrome/.test(navigator.userAgent)) {
+                return 'chromedebugger';
+            }
+
+            if (typeof atob !== 'undefined') {
+                return 'chromedebugger';
+            }
+
+            if (typeof Realm === 'undefined') {
+                throw new Error('Missing Realm constructor. Did you run "react-native link realm"? Please see https://realm.io/docs/react-native/latest/#missing-realm-constructor for troubleshooting');
+            }
+
+            return 'reactnative';
+        }
+
+        if (typeof Realm !== 'undefined') {
+            return 'jscore';
+        }
+
+        if (typeof global !== 'undefined' && global.__debug__) {
+            return 'vscodedebugger';
+        }
+
+        if (typeof navigator !== 'undefined' && /Chrome/.test(navigator.userAgent)) {
+            return 'chromedebugger';
+        }
+
+        throw Error("Unknown execution context");
+    }
+
+    var realmConstructor;
+
+    switch (getContext()) {
+        case 'nodejs':
+        case 'electron':
+            nodeRequire('./submit-analytics')('Run');
+            var binary = nodeRequire('node-pre-gyp');
+            var path = nodeRequire('path');
+            var pkg = path.resolve(path.join(__dirname, '../package.json'));
+            var binding_path = binary.find(pkg);
+            realmConstructor = require_method(binding_path).Realm;
+            break;
+
+        case 'reactnative':
+        case 'jscore':
+            realmConstructor = Realm;
+            break;
+
+        case 'chromedebugger':
+        case 'vscodedebugger':
+            realmConstructor = _require(_dependencyMap[0], './browser').default;
+            break;
+    }
+
+    if (!realmConstructor) {
+        throw Error("Error trying to establish execution context");
+    }
+
+    _require(_dependencyMap[1], './extensions')(realmConstructor);
+
+    if (realmConstructor.Sync) {
+        if (getContext() === 'nodejs') {
+            nodeRequire('./notifier')(realmConstructor);
+
+            if (!realmConstructor.Worker) {
+                Object.defineProperty(realmConstructor, 'Worker', {
+                    value: nodeRequire('./worker')
+                });
+            }
+        }
+    }
+
+    module.exports = realmConstructor;
+},523,[524,544],"node_modules\\realm\\lib\\index.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+    var _reactNative = _require(_dependencyMap[0], "react-native");
+
+    var _constants = _require(_dependencyMap[1], "./constants");
+
+    var _collections = _require(_dependencyMap[2], "./collections");
+
+    var collections = _interopRequireWildcard(_collections);
+
+    var _lists = _require(_dependencyMap[3], "./lists");
+
+    var _lists2 = _interopRequireDefault(_lists);
+
+    var _results = _require(_dependencyMap[4], "./results");
+
+    var _results2 = _interopRequireDefault(_results);
+
+    var _objects = _require(_dependencyMap[5], "./objects");
+
+    var objects = _interopRequireWildcard(_objects);
+
+    var _user = _require(_dependencyMap[6], "./user");
+
+    var _user2 = _interopRequireDefault(_user);
+
+    var _session = _require(_dependencyMap[7], "./session");
+
+    var _session2 = _interopRequireDefault(_session);
+
+    var _subscription = _require(_dependencyMap[8], "./subscription");
+
+    var _subscription2 = _interopRequireDefault(_subscription);
+
+    var _rpc = _require(_dependencyMap[9], "./rpc");
+
+    var rpc = _interopRequireWildcard(_rpc);
+
+    var _util = _require(_dependencyMap[10], "./util");
+
+    var util = _interopRequireWildcard(_util);
+
+    var _userMethods = _require(_dependencyMap[11], "../user-methods");
+
+    function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+    function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+    function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    var _NativeModules$Realm = _reactNative.NativeModules.Realm,
+        debugHosts = _NativeModules$Realm.debugHosts,
+        debugPort = _NativeModules$Realm.debugPort;
+    rpc.registerTypeConverter(_constants.objectTypes.LIST, _lists.createList);
+    rpc.registerTypeConverter(_constants.objectTypes.RESULTS, _results.createResults);
+    rpc.registerTypeConverter(_constants.objectTypes.OBJECT, objects.createObject);
+    rpc.registerTypeConverter(_constants.objectTypes.REALM, createRealm);
+    rpc.registerTypeConverter(_constants.objectTypes.USER, _user.createUser);
+    rpc.registerTypeConverter(_constants.objectTypes.SESSION, _session.createSession);
+    rpc.registerTypeConverter(_constants.objectTypes.SUBSCRIPTION, _subscription.createSubscription);
+
+    function createRealm(_, info) {
+        var realm = Object.create(Realm.prototype);
+        setupRealm(realm, info.id);
+        return realm;
+    }
+
+    function setupRealm(realm, realmId) {
+        realm[_constants.keys.id] = realmId;
+        realm[_constants.keys.realm] = realmId;
+        realm[_constants.keys.type] = _constants.objectTypes.REALM;
+        ['empty', 'path', 'readOnly', 'inMemory', 'schema', 'schemaVersion', 'syncSession', 'isInTransaction', 'isClosed'].forEach(function (name) {
+            Object.defineProperty(realm, name, {
+                get: util.getterForProperty(name)
+            });
+        });
+    }
+
+    function getObjectType(realm, type) {
+        if (typeof type == 'function') {
+            return objects.typeForConstructor(realm[_constants.keys.realm], type);
+        }
+
+        return type;
+    }
+
+    var Realm = function () {
+        function Realm(config) {
+            _classCallCheck(this, Realm);
+
+            var schemas = typeof config == 'object' && config.schema;
+            var constructors = schemas ? {} : null;
+
+            for (var i = 0, len = schemas ? schemas.length : 0; i < len; i++) {
+                var item = schemas[i];
+
+                if (typeof item == 'function') {
+                    var schema = item.schema;
+
+                    if (!schema || typeof schema != 'object') {
+                        throw new Error("Realm object constructor must have a 'schema' property.");
+                    }
+
+                    var name = schema.name,
+                        properties = schema.properties;
+
+                    if (!name || typeof name != 'string') {
+                        throw new Error("Failed to read ObjectSchema: name must be of type 'string', got (" + typeof name + ")");
+                    } else if (!properties || typeof properties != 'object') {
+                        throw new Error("Failed to read ObjectSchema: properties must be of type 'object', got (" + typeof properties + ")");
+                    }
+
+                    schemas.splice(i, 1, schema);
+                    constructors[name] = item;
+                }
+            }
+
+            var realmId = rpc.createRealm(Array.from(arguments));
+            setupRealm(this, realmId);
+            objects.registerConstructors(realmId, this.path, constructors);
+        }
+
+        _createClass(Realm, [{
+            key: "create",
+            value: function create(type) {
+                var method = util.createMethod(_constants.objectTypes.REALM, 'create', true);
+
+                for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+                    args[_key - 1] = arguments[_key];
+                }
+
+                return method.apply(this, [getObjectType(this, type)].concat(args));
+            }
+        }, {
+            key: "objects",
+            value: function objects(type) {
+                var method = util.createMethod(_constants.objectTypes.REALM, 'objects');
+
+                for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+                    args[_key2 - 1] = arguments[_key2];
+                }
+
+                return method.apply(this, [getObjectType(this, type)].concat(args));
+            }
+        }, {
+            key: "objectForPrimaryKey",
+            value: function objectForPrimaryKey(type) {
+                var method = util.createMethod(_constants.objectTypes.REALM, 'objectForPrimaryKey');
+
+                for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+                    args[_key3 - 1] = arguments[_key3];
+                }
+
+                return method.apply(this, [getObjectType(this, type)].concat(args));
+            }
+        }]);
+
+        return Realm;
+    }();
+
+    exports.default = Realm;
+    util.createMethods(Realm.prototype, _constants.objectTypes.REALM, ['addListener', 'removeListener', 'removeAllListeners', 'close', '_waitForDownload', '_objectForObjectId']);
+    util.createMethods(Realm.prototype, _constants.objectTypes.REALM, ['delete', 'deleteModel', 'deleteAll', 'write', 'compact', 'beginTransaction', 'commitTransaction', 'cancelTransaction'], true);
+    var Sync = {
+        User: _user2.default,
+        Session: _session2.default,
+        Subscription: _subscription2.default
+    };
+    Object.defineProperties(Realm, {
+        Collection: {
+            value: collections.default
+        },
+        List: {
+            value: _lists2.default
+        },
+        Results: {
+            value: _results2.default
+        },
+        Object: {
+            value: objects.default
+        },
+        Sync: {
+            value: Sync
+        },
+        defaultPath: {
+            get: util.getterForProperty('defaultPath'),
+            set: util.setterForProperty('defaultPath')
+        },
+        schemaVersion: {
+            value: function value(_path, _encryptionKey) {
+                return rpc.callMethod(undefined, Realm[_constants.keys.id], 'schemaVersion', Array.from(arguments));
+            }
+        },
+        deleteFile: {
+            value: function value(config) {
+                return rpc.callMethod(undefined, Realm[_constants.keys.id], 'deleteFile', Array.from(arguments));
+            }
+        },
+        copyBundledRealmFiles: {
+            value: function value() {
+                return rpc.callMethod(undefined, Realm[_constants.keys.id], 'copyBundledRealmFiles', []);
+            }
+        },
+        clearTestState: {
+            value: function value() {
+                collections.clearMutationListeners();
+                objects.clearRegisteredConstructors();
+                rpc.clearTestState();
+            }
+        }
+    });
+
+    for (var i = 0, len = debugHosts.length; i < len; i++) {
+        try {
+            var refreshAccessTokenCallback = _userMethods.static._refreshAccessToken.bind(_user2.default);
+
+            Realm[_constants.keys.id] = rpc.createSession(refreshAccessTokenCallback, debugHosts[i] + ':' + debugPort);
+            break;
+        } catch (e) {
+            if (i < len - 1) {
+                continue;
+            }
+
+            console.error(e);
+            throw new Error('Realm failed to connect to the embedded debug server inside the app. ' + 'If attempting to use Chrome debugging from a device, ensure the device is ' + 'reachable on the same network as this machine.');
+        }
+    }
+},524,[12,525,526,530,531,532,533,534,535,528,527,536],"node_modules\\realm\\lib\\browser\\index.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    var keys = exports.keys = {};
+    var objectTypes = exports.objectTypes = {};
+    var propTypes = exports.propTypes = {};
+    ['id', 'realm', 'type'].forEach(function (name) {
+        keys[name] = Symbol(name);
+    });
+    ['DATA', 'DATE', 'DICT', 'FUNCTION', 'LIST', 'OBJECT', 'REALM', 'RESULTS', 'USER', 'SESSION', 'SUBSCRIPTION', 'UNDEFINED'].forEach(function (type) {
+        Object.defineProperty(objectTypes, type, {
+            value: type.toLowerCase()
+        });
+    });
+    ['BOOL', 'INT', 'FLOAT', 'DOUBLE', 'STRING', 'DATE', 'DATA', 'OBJECT', 'LIST'].forEach(function (type) {
+        Object.defineProperty(propTypes, type, {
+            value: type.toLowerCase(),
+            enumerable: true
+        });
+    });
+},525,[],"node_modules\\realm\\lib\\browser\\constants.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.addMutationListener = addMutationListener;
+    exports.removeMutationListener = removeMutationListener;
+    exports.clearMutationListeners = clearMutationListeners;
+    exports.fireMutationListeners = fireMutationListeners;
+    exports.createCollection = createCollection;
+
+    var _constants = _require(_dependencyMap[0], "./constants");
+
+    var _util = _require(_dependencyMap[1], "./util");
+
+    var _rpc = _require(_dependencyMap[2], "./rpc");
+
+    function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    var mutationListeners = {};
+
+    var Collection = function Collection() {
+        _classCallCheck(this, Collection);
+
+        throw new TypeError('Illegal constructor');
+    };
+
+    exports.default = Collection;
+
+    function addMutationListener(realmId, callback) {
+        var listeners = mutationListeners[realmId] || (mutationListeners[realmId] = new Set());
+        listeners.add(callback);
+    }
+
+    function removeMutationListener(realmId, callback) {
+        var listeners = mutationListeners[realmId];
+
+        if (listeners) {
+            listeners.delete(callback);
+        }
+    }
+
+    function clearMutationListeners() {
+        mutationListeners = {};
+    }
+
+    function fireMutationListeners(realmId) {
+        var listeners = mutationListeners[realmId];
+
+        if (listeners) {
+            listeners.forEach(function (cb) {
+                return cb();
+            });
+        }
+    }
+
+    function isIndex(propertyName) {
+        return typeof propertyName === 'number' || typeof propertyName === 'string' && /^-?\d+$/.test(propertyName);
+    }
+
+    var mutable = Symbol('mutable');
+    var traps = {
+        get: function get(collection, property, receiver) {
+            if (isIndex(property)) {
+                return (0, _rpc.getProperty)(collection[_constants.keys.realm], collection[_constants.keys.id], property);
+            }
+
+            return Reflect.get(collection, property, collection);
+        },
+        set: function set(collection, property, value, receiver) {
+            if (isIndex(property)) {
+                if (!collection[mutable]) {
+                    return false;
+                }
+
+                (0, _rpc.setProperty)(collection[_constants.keys.realm], collection[_constants.keys.id], property, value);
+
+                if (value && typeof value == 'object') {
+                    fireMutationListeners(collection[_constants.keys.realm]);
+                }
+
+                return true;
+            }
+
+            if (!Reflect.set(collection, property, value, collection)) {
+                throw new TypeError("Cannot assign to read only property '" + property + "'");
+            }
+
+            return true;
+        },
+        ownKeys: function ownKeys(collection) {
+            return Reflect.ownKeys(collection).concat(Array.from({
+                length: collection.length
+            }, function (value, key) {
+                return String(key);
+            }));
+        },
+        getOwnPropertyDescriptor: function getOwnPropertyDescriptor(collection, property) {
+            var _this = this;
+
+            if (isIndex(property)) {
+                var descriptor = {
+                    enumerable: true,
+                    configurable: true,
+                    writable: collection[mutable]
+                };
+                Reflect.defineProperty(descriptor, "value", {
+                    get: function get() {
+                        return _this.get(collection, property);
+                    }
+                });
+                return descriptor;
+            }
+
+            return Reflect.getOwnPropertyDescriptor(collection, property);
+        },
+        has: function has(collection, property) {
+            if (isIndex(property)) {
+                return true;
+            }
+
+            return Reflect.has(collection, property);
+        }
+    };
+
+    function createCollection(prototype, realmId, info, _mutable) {
+        var collection = Object.create(prototype);
+        Object.defineProperties(collection, {
+            'length': {
+                get: (0, _util.getterForProperty)('length')
+            },
+            'type': {
+                get: (0, _util.getterForProperty)('type')
+            },
+            'optional': {
+                get: (0, _util.getterForProperty)('optional')
+            }
+        });
+        collection[_constants.keys.realm] = realmId;
+        collection[_constants.keys.id] = info.id;
+        collection[_constants.keys.type] = info.type;
+        collection[mutable] = _mutable;
+        return new Proxy(collection, traps);
+    }
+},526,[525,527,528],"node_modules\\realm\\lib\\browser\\collections.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.createMethods = createMethods;
+    exports.createMethod = createMethod;
+    exports.getterForProperty = getterForProperty;
+    exports.setterForProperty = setterForProperty;
+
+    var _collections = _require(_dependencyMap[0], "./collections");
+
+    var _constants = _require(_dependencyMap[1], "./constants");
+
+    var _rpc = _require(_dependencyMap[2], "./rpc");
+
+    var rpc = _interopRequireWildcard(_rpc);
+
+    function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+    function createMethods(prototype, type, methodNames, mutates) {
+        var props = {};
+        methodNames.forEach(function (name) {
+            props[name] = {
+                value: createMethod(type, name, mutates)
+            };
+        });
+        Object.defineProperties(prototype, props);
+    }
+
+    function createMethod(type, name, mutates) {
+        return function () {
+            var realmId = this[_constants.keys.realm];
+            var id = this[_constants.keys.id];
+
+            if (!realmId || !id) {
+                throw new TypeError(name + ' method was not called on a Realm object!');
+            }
+
+            if (this[_constants.keys.type] !== type) {
+                throw new TypeError(name + ' method was called on an object of the wrong type!');
+            }
+
+            try {
+                return rpc.callMethod(realmId, id, name, Array.from(arguments));
+            } finally {
+                if (mutates) {
+                    (0, _collections.fireMutationListeners)(realmId);
+                }
+            }
+        };
+    }
+
+    function getterForProperty(name) {
+        return function () {
+            return rpc.getProperty(this[_constants.keys.realm], this[_constants.keys.id], name);
+        };
+    }
+
+    function setterForProperty(name) {
+        return function (value) {
+            var realmId = this[_constants.keys.realm];
+            rpc.setProperty(realmId, this[_constants.keys.id], name, value);
+
+            if (value && typeof value == 'object') {
+                (0, _collections.fireMutationListeners)(realmId);
+            }
+        };
+    }
+},527,[526,525,528],"node_modules\\realm\\lib\\browser\\util.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+    exports.registerTypeConverter = registerTypeConverter;
+    exports.createSession = createSession;
+    exports.createRealm = createRealm;
+    exports.createUser = createUser;
+    exports._adminUser = _adminUser;
+    exports._getExistingUser = _getExistingUser;
+    exports.callMethod = callMethod;
+    exports.getProperty = getProperty;
+    exports.setProperty = setProperty;
+    exports.getAllUsers = getAllUsers;
+    exports.clearTestState = clearTestState;
+    exports.deserialize = deserialize;
+
+    var _base = _require(_dependencyMap[0], "./base64");
+
+    var base64 = _interopRequireWildcard(_base);
+
+    var _constants = _require(_dependencyMap[1], "./constants");
+
+    function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+    var idKey = _constants.keys.id,
+        _realmKey = _constants.keys.realm;
+    var registeredCallbacks = [];
+    var typeConverters = {};
+    var persistentCallback = Symbol("persistentCallback");
+    var XMLHttpRequest = global.originalXMLHttpRequest || global.XMLHttpRequest;
+    var sessionHost = void 0;
+    var sessionId = void 0;
+
+    if (XMLHttpRequest.__proto__ != global.XMLHttpRequestEventTarget) {
+        var fakeXMLHttpRequest = XMLHttpRequest;
+        delete global.XMLHttpRequest;
+        XMLHttpRequest = global.XMLHttpRequest;
+        global.XMLHttpRequest = fakeXMLHttpRequest;
+    }
+
+    registerTypeConverter(_constants.objectTypes.DATA, function (_, _ref) {
+        var value = _ref.value;
+        return base64.decode(value);
+    });
+    registerTypeConverter(_constants.objectTypes.DATE, function (_, _ref2) {
+        var value = _ref2.value;
+        return new Date(value);
+    });
+    registerTypeConverter(_constants.objectTypes.DICT, deserializeDict);
+    registerTypeConverter(_constants.objectTypes.FUNCTION, deserializeFunction);
+
+    function registerTypeConverter(type, handler) {
+        typeConverters[type] = handler;
+    }
+
+    function createSession(refreshAccessToken, host) {
+        refreshAccessToken[persistentCallback] = true;
+        sessionId = sendRequest('create_session', {
+            refreshAccessToken: serialize(undefined, refreshAccessToken)
+        }, host);
+        sessionHost = host;
+        return sessionId;
+    }
+
+    function createRealm(args) {
+        if (args) {
+            args = args.map(function (arg) {
+                return serialize(null, arg);
+            });
+        }
+
+        return sendRequest('create_realm', {
+            arguments: args
+        });
+    }
+
+    function createUser(args) {
+        args = args.map(function (arg) {
+            return serialize(null, arg);
+        });
+        var result = sendRequest('create_user', {
+            arguments: args
+        });
+        return deserialize(undefined, result);
+    }
+
+    function _adminUser(args) {
+        args = args.map(function (arg) {
+            return serialize(null, arg);
+        });
+        var result = sendRequest('_adminUser', {
+            arguments: args
+        });
+        return deserialize(undefined, result);
+    }
+
+    function _getExistingUser(args) {
+        args = args.map(function (arg) {
+            return serialize(null, arg);
+        });
+        var result = sendRequest('_getExistingUser', {
+            arguments: args
+        });
+        return deserialize(undefined, result);
+    }
+
+    function callMethod(realmId, id, name, args) {
+        if (args) {
+            args = args.map(function (arg) {
+                return serialize(realmId, arg);
+            });
+        }
+
+        var result = sendRequest('call_method', {
+            realmId: realmId,
+            id: id,
+            name: name,
+            arguments: args
+        });
+        return deserialize(realmId, result);
+    }
+
+    function getProperty(realmId, id, name) {
+        var result = sendRequest('get_property', {
+            realmId: realmId,
+            id: id,
+            name: name
+        });
+        return deserialize(realmId, result);
+    }
+
+    function setProperty(realmId, id, name, value) {
+        value = serialize(realmId, value);
+        sendRequest('set_property', {
+            realmId: realmId,
+            id: id,
+            name: name,
+            value: value
+        });
+    }
+
+    function getAllUsers() {
+        var result = sendRequest('get_all_users');
+        return deserialize(undefined, result);
+    }
+
+    function clearTestState() {
+        sendRequest('clear_test_state');
+        registeredCallbacks = registeredCallbacks.filter(function (cb) {
+            return Reflect.has(cb, persistentCallback);
+        });
+    }
+
+    function registerCallback(callback) {
+        var key = registeredCallbacks.indexOf(callback);
+        return key >= 0 ? key : registeredCallbacks.push(callback) - 1;
+    }
+
+    function serialize(realmId, value) {
+        if (typeof value == 'undefined') {
+            return {
+                type: _constants.objectTypes.UNDEFINED
+            };
+        }
+
+        if (typeof value == 'function') {
+            return {
+                type: _constants.objectTypes.FUNCTION,
+                value: registerCallback(value)
+            };
+        }
+
+        if (!value || typeof value != 'object') {
+            return {
+                value: value
+            };
+        }
+
+        var id = value[idKey];
+
+        if (id) {
+            return {
+                id: id
+            };
+        }
+
+        if (value instanceof Date) {
+            return {
+                type: _constants.objectTypes.DATE,
+                value: value.getTime()
+            };
+        }
+
+        if (Array.isArray(value)) {
+            var array = value.map(function (item) {
+                return serialize(realmId, item);
+            });
+            return {
+                value: array
+            };
+        }
+
+        if (value instanceof ArrayBuffer || ArrayBuffer.isView(value)) {
+            return {
+                type: _constants.objectTypes.DATA,
+                value: base64.encode(value)
+            };
+        }
+
+        var keys = Object.keys(value);
+        var values = keys.map(function (key) {
+            return serialize(realmId, value[key]);
+        });
+        return {
+            type: _constants.objectTypes.DICT,
+            keys: keys,
+            values: values
+        };
+    }
+
+    function deserialize(realmId, info) {
+        var type = info.type;
+        var handler = type && typeConverters[type];
+
+        if (handler) {
+            return handler(realmId, info);
+        }
+
+        var value = info.value;
+
+        if (value && Array.isArray(value)) {
+            return value.map(function (item) {
+                return deserialize(realmId, item);
+            });
+        }
+
+        return value;
+    }
+
+    function deserializeDict(realmId, info) {
+        var keys = info.keys,
+            values = info.values;
+        var object = {};
+
+        for (var i = 0, len = keys.length; i < len; i++) {
+            object[keys[i]] = deserialize(realmId, values[i]);
+        }
+
+        return object;
+    }
+
+    function deserializeFunction(realmId, info) {
+        return registeredCallbacks[info.value];
+    }
+
+    function makeRequest(url, data) {
+        var statusCode = void 0;
+        var responseText = void 0;
+
+        if (global.__debug__) {
+            var request = global.__debug__.require('sync-request');
+
+            var response = request('POST', url, {
+                body: JSON.stringify(data),
+                headers: {
+                    "Content-Type": "text/plain;charset=UTF-8"
+                }
+            });
+            statusCode = response.statusCode;
+            responseText = response.body.toString('utf-8');
+        } else {
+            var body = JSON.stringify(data);
+
+            var _request = new XMLHttpRequest();
+
+            _request.open('POST', url, false);
+
+            _request.send(body);
+
+            statusCode = _request.status;
+            responseText = _request.responseText;
+        }
+
+        if (statusCode != 200) {
+            throw new Error(responseText);
+        }
+
+        return JSON.parse(responseText);
+    }
+
+    var pollTimeoutId = void 0;
+
+    function deserialize_json_value(value) {
+        var result = {};
+
+        for (var index = 0; index < value.keys.length; index++) {
+            var propName = value.keys[index];
+            var propValue = value.values[index];
+
+            if (propValue.type && propValue.type == 'dict') {
+                result[propName] = deserialize_json_value(propValue);
+            } else {
+                result[propName] = propValue.value;
+            }
+        }
+
+        return result;
+    }
+
+    function sendRequest(command, data) {
+        var host = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : sessionHost;
+        clearTimeout(pollTimeoutId);
+
+        try {
+            if (!host) {
+                throw new Error('Must first create RPC session with a valid host');
+            }
+
+            data = _extends({}, data, sessionId ? {
+                sessionId: sessionId
+            } : null);
+            var url = 'http://' + host + '/' + command;
+            var response = makeRequest(url, data);
+
+            if (!response || response.error) {
+                var error = response && response.error;
+
+                if (error && error.replace) {
+                    error = error.replace(/^[a-z]+: /i, '');
+                } else if (error.type && error.type === 'dict') {
+                    var responseError = deserialize_json_value(error);
+                    var responeMessage = void 0;
+
+                    if (response.message && response.message !== '') {
+                        responeMessage = response.message.replace(/^[a-z]+: /i, '');
+                    }
+
+                    var exceptionToReport = new Error(responeMessage);
+
+                    _extends(exceptionToReport, responseError);
+
+                    throw exceptionToReport;
+                }
+
+                throw new Error(error || "Invalid response for \"" + command + "\"");
+            }
+
+            var callback = response.callback;
+
+            if (callback != null) {
+                var result = void 0;
+
+                var _error = void 0;
+
+                try {
+                    var realmId = data.realmId;
+                    var thisObject = deserialize(realmId, response.this);
+                    var args = deserialize(realmId, response.arguments);
+                    result = registeredCallbacks[callback].apply(thisObject, args);
+                    result = serialize(realmId, result);
+                } catch (e) {
+                    _error = e.message || '' + e;
+                }
+
+                var callbackCommand = "callback_result";
+
+                if (command == 'callbacks_poll') {
+                    callbackCommand = "callback_poll_result";
+                }
+
+                return sendRequest(callbackCommand, {
+                    callback: callback,
+                    result: result,
+                    error: _error,
+                    "callback_call_counter": response.callback_call_counter
+                });
+            }
+
+            return response.result;
+        } finally {
+            pollTimeoutId = setTimeout(function () {
+                return sendRequest('callbacks_poll');
+            }, 100);
+        }
+    }
+},528,[529,525],"node_modules\\realm\\lib\\browser\\rpc.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.decode = decode;
+    exports.encode = encode;
+    var CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    var CHAR_MAP = {};
+    Array.from(CHARS, function (char, i) {
+        return CHAR_MAP[char] = i;
+    });
+
+    function decode(base64) {
+        var length = base64.length;
+        var byteCount = length * 0.75;
+
+        if (base64[length - 1] === '=') {
+            byteCount--;
+
+            if (base64[length - 2] === '=') {
+                byteCount--;
+            }
+        }
+
+        var buffer = new ArrayBuffer(byteCount);
+        var bytes = new Uint8Array(buffer);
+
+        for (var i = 0, j = 0; i < length; i += 4) {
+            var index1 = CHAR_MAP[base64[i]];
+            var index2 = CHAR_MAP[base64[i + 1]];
+            var index3 = CHAR_MAP[base64[i + 2]];
+            var index4 = CHAR_MAP[base64[i + 3]];
+            bytes[j++] = (index1 << 2) + ((index2 & 0x30) >> 4);
+            bytes[j++] = ((index2 & 0x0f) << 4) + ((index3 & 0x3c) >> 2);
+            bytes[j++] = ((index3 & 0x03) << 6) + index4;
+        }
+
+        return buffer;
+    }
+
+    function encode(data) {
+        var byteOffset = 0;
+        var buffer;
+
+        if (data instanceof ArrayBuffer) {
+            buffer = data;
+        } else if (ArrayBuffer.isView(data)) {
+            buffer = data.buffer;
+            byteOffset = data.byteOffset;
+        } else {
+            throw new TypeError('Can only base64 encode ArrayBuffer and ArrayBufferView objects');
+        }
+
+        var byteCount = data.byteLength;
+        var bytes = new Uint8Array(buffer, byteOffset, byteCount);
+        var base64 = '';
+
+        for (var i = 0; i < byteCount; i += 3) {
+            base64 += CHARS[(bytes[i] & 0xfc) >> 2];
+            base64 += CHARS[((bytes[i] & 0x03) << 4) + ((bytes[i + 1] & 0xf0) >> 4)];
+            base64 += CHARS[((bytes[i + 1] & 0x0f) << 2) + ((bytes[i + 2] & 0xc0) >> 6)];
+            base64 += CHARS[bytes[i + 2] & 0x3f];
+        }
+
+        switch (byteCount % 3) {
+            case 1:
+                return base64.slice(0, -2) + '==';
+
+            case 2:
+                return base64.slice(0, -1) + '=';
+
+            default:
+                return base64;
+        }
+    }
+},529,[],"node_modules\\realm\\lib\\browser\\base64.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.createList = createList;
+
+    var _collections = _require(_dependencyMap[0], "./collections");
+
+    var _collections2 = _interopRequireDefault(_collections);
+
+    var _constants = _require(_dependencyMap[1], "./constants");
+
+    var _util = _require(_dependencyMap[2], "./util");
+
+    function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+    function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+    function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+    var List = function (_Collection) {
+        _inherits(List, _Collection);
+
+        function List() {
+            _classCallCheck(this, List);
+
+            return _possibleConstructorReturn(this, (List.__proto__ || Object.getPrototypeOf(List)).apply(this, arguments));
+        }
+
+        return List;
+    }(_collections2.default);
+
+    exports.default = List;
+    (0, _util.createMethods)(List.prototype, _constants.objectTypes.LIST, ['filtered', 'sorted', 'snapshot', 'isValid', 'indexOf', 'min', 'max', 'sum', 'avg', 'addListener', 'removeListener', 'removeAllListeners']);
+    (0, _util.createMethods)(List.prototype, _constants.objectTypes.LIST, ['pop', 'shift', 'push', 'unshift', 'splice'], true);
+
+    function createList(realmId, info) {
+        return (0, _collections.createCollection)(List.prototype, realmId, info, true);
+    }
+},530,[526,525,527],"node_modules\\realm\\lib\\browser\\lists.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.createResults = createResults;
+
+    var _collections = _require(_dependencyMap[0], "./collections");
+
+    var _collections2 = _interopRequireDefault(_collections);
+
+    var _constants = _require(_dependencyMap[1], "./constants");
+
+    var _util = _require(_dependencyMap[2], "./util");
+
+    function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+    function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+    function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+    var Results = function (_Collection) {
+        _inherits(Results, _Collection);
+
+        function Results() {
+            _classCallCheck(this, Results);
+
+            return _possibleConstructorReturn(this, (Results.__proto__ || Object.getPrototypeOf(Results)).apply(this, arguments));
+        }
+
+        return Results;
+    }(_collections2.default);
+
+    exports.default = Results;
+    (0, _util.createMethods)(Results.prototype, _constants.objectTypes.RESULTS, ['filtered', 'sorted', 'snapshot', 'subscribe', 'isValid', 'indexOf', 'min', 'max', 'sum', 'avg', 'addListener', 'removeListener', 'removeAllListeners']);
+    (0, _util.createMethods)(Results.prototype, _constants.objectTypes.RESULTS, ['update'], true);
+
+    function createResults(realmId, info) {
+        return (0, _collections.createCollection)(Results.prototype, realmId, info);
+    }
+},531,[526,525,527],"node_modules\\realm\\lib\\browser\\results.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.clearRegisteredConstructors = clearRegisteredConstructors;
+    exports.createObject = createObject;
+    exports.registerConstructors = registerConstructors;
+    exports.typeForConstructor = typeForConstructor;
+
+    var _constants = _require(_dependencyMap[0], "./constants");
+
+    var _util = _require(_dependencyMap[1], "./util");
+
+    function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    var registeredConstructors = {};
+    var registeredRealmPaths = {};
+
+    var RealmObject = function RealmObject() {
+        _classCallCheck(this, RealmObject);
+    };
+
+    exports.default = RealmObject;
+    (0, _util.createMethods)(RealmObject.prototype, _constants.objectTypes.OBJECT, ['isValid', 'objectSchema', 'linkingObjects', 'linkingObjectsCount', '_objectId', '_isSameObject']);
+
+    function clearRegisteredConstructors() {
+        registeredConstructors = {};
+        registeredRealmPaths = {};
+    }
+
+    function createObject(realmId, info) {
+        var schema = info.schema;
+        var realmPath = registeredRealmPaths[realmId];
+        var constructor = (registeredConstructors[realmPath] || {})[schema.name];
+        var object = Object.create(constructor ? constructor.prototype : RealmObject.prototype);
+        object[_constants.keys.realm] = realmId;
+        object[_constants.keys.id] = info.id;
+        object[_constants.keys.type] = info.type;
+        schema.properties.forEach(function (name) {
+            Object.defineProperty(object, name, {
+                enumerable: true,
+                get: (0, _util.getterForProperty)(name),
+                set: (0, _util.setterForProperty)(name)
+            });
+        });
+
+        if (constructor) {
+            var result = constructor.call(object);
+
+            if (result != null && result != object) {
+                throw new Error('Realm object constructor must not return another value');
+            }
+        }
+
+        return object;
+    }
+
+    function registerConstructors(realmId, realmPath, constructors) {
+        registeredRealmPaths[realmId] = realmPath;
+
+        if (constructors) {
+            registeredConstructors[realmPath] = constructors;
+        }
+    }
+
+    function typeForConstructor(realmId, constructor) {
+        var realmPath = registeredRealmPaths[realmId];
+        var constructors = registeredConstructors[realmPath];
+
+        for (var name in constructors) {
+            if (constructors[name] == constructor) {
+                return name;
+            }
+        }
+
+        throw new Error("Constructor was not registered in the schema for this Realm");
+    }
+},532,[525,527],"node_modules\\realm\\lib\\browser\\objects.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+    var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+    exports.createUser = createUser;
+
+    var _rpc = _require(_dependencyMap[0], "./rpc");
+
+    var _constants = _require(_dependencyMap[1], "./constants");
+
+    var _util = _require(_dependencyMap[2], "./util");
+
+    function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    var User = function () {
+        function User() {
+            _classCallCheck(this, User);
+        }
+
+        _createClass(User, null, [{
+            key: "createUser",
+            value: function createUser(server, identity, token, isAdminToken, isAdminUser) {
+                return (0, _rpc.createUser)(Array.from(arguments));
+            }
+        }, {
+            key: "_adminUser",
+            value: function _adminUser(adminToken, server) {
+                return (0, _rpc._adminUser)(Array.from(arguments));
+            }
+        }, {
+            key: "_getExistingUser",
+            value: function _getExistingUser(server, identity) {
+                return (0, _rpc._getExistingUser)(Array.from(arguments));
+            }
+        }, {
+            key: "all",
+            get: function get() {
+                return (0, _rpc.getAllUsers)();
+            }
+        }]);
+
+        return User;
+    }();
+
+    exports.default = User;
+    (0, _util.createMethods)(User.prototype, _constants.objectTypes.USER, ['_logout', '_sessionForOnDiskPath']);
+
+    function createUser(realmId, info) {
+        var userProxy = Object.create(User.prototype);
+        userProxy[_constants.keys.realm] = "(User object)";
+        userProxy[_constants.keys.id] = info.id;
+        userProxy[_constants.keys.type] = _constants.objectTypes.USER;
+
+        _extends(userProxy, info.data);
+
+        return userProxy;
+    }
+},533,[528,525,527],"node_modules\\realm\\lib\\browser\\user.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.createSession = createSession;
+
+    var _constants = _require(_dependencyMap[0], "./constants");
+
+    var _util = _require(_dependencyMap[1], "./util");
+
+    var _rpc = _require(_dependencyMap[2], "./rpc");
+
+    function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    var Session = function Session() {
+        _classCallCheck(this, Session);
+    };
+
+    exports.default = Session;
+    Object.defineProperties(Session.prototype, {
+        url: {
+            get: (0, _util.getterForProperty)('url')
+        },
+        state: {
+            get: (0, _util.getterForProperty)('state')
+        }
+    });
+    (0, _util.createMethods)(Session.prototype, _constants.objectTypes.SESSION, ['_refreshAccessToken', '_simulateError', 'addProgressNotification', 'removeProgressNotification']);
+
+    function createSession(realmId, info) {
+        var sessionProxy = Object.create(Session.prototype);
+        sessionProxy[_constants.keys.realm] = "(Session object)";
+        sessionProxy[_constants.keys.id] = info.id;
+        sessionProxy[_constants.keys.type] = _constants.objectTypes.SESSION;
+        sessionProxy.user = (0, _rpc.deserialize)(realmId, info.data.user);
+        sessionProxy.config = (0, _rpc.deserialize)(realmId, info.data.config);
+        return sessionProxy;
+    }
+},534,[525,527,528],"node_modules\\realm\\lib\\browser\\session.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _constants = _require(_dependencyMap[0], "./constants");
+
+    var _util = _require(_dependencyMap[1], "./util");
+
+    function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    var Subscription = function Subscription() {
+        _classCallCheck(this, Subscription);
+    };
+
+    exports.default = Subscription;
+    Object.defineProperties(Subscription.prototype, {
+        error: {
+            get: (0, _util.getterForProperty)('error')
+        },
+        state: {
+            get: (0, _util.getterForProperty)('state')
+        }
+    });
+    (0, _util.createMethods)(Subscription.prototype, _constants.objectTypes.SUBSCRIPTION, ['unsubscribe', 'addListener', 'removeListener']);
+},535,[525,527],"node_modules\\realm\\lib\\browser\\subscription.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+    var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[typeof Symbol === "function" ? Symbol.iterator : "@@iterator"](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if ((typeof Symbol === "function" ? Symbol.iterator : "@@iterator") in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
+    var AuthError = _require(_dependencyMap[0], './errors').AuthError;
+
+    var permissionApis = _require(_dependencyMap[1], './permission-api');
+
+    var merge = _require(_dependencyMap[2], 'deepmerge');
+
+    var require_method = _require;
+
+    var URL = _require(_dependencyMap[3], 'url-parse');
+
+    function node_require(module) {
+        return require_method(module);
+    }
+
+    function checkTypes(args, types) {
+        args = Array.prototype.slice.call(args);
+
+        for (var i = 0; i < types.length; ++i) {
+            if (args.length > i && typeof args[i] !== types[i]) {
+                throw new TypeError('param ' + i + ' must be of type ' + types[i]);
+            }
+        }
+    }
+
+    var performFetch = function () {
+        var doFetch = typeof fetch === 'undefined' ? node_require('node-fetch') : fetch;
+        var queue = [];
+        var count = 0;
+        var maxCount = 5;
+
+        var next = function next() {
+            if (count >= maxCount) {
+                return;
+            }
+
+            var req = queue.shift();
+
+            if (!req) {
+                return;
+            }
+
+            var _req = _slicedToArray(req, 4),
+                url = _req[0],
+                options = _req[1],
+                resolve = _req[2],
+                reject = _req[3];
+
+            ++count;
+            doFetch(url, options).then(function (response) {
+                --count;
+                next();
+                resolve(response);
+            }).catch(function (error) {
+                --count;
+                next();
+                reject(error);
+            });
+        };
+
+        return function (url, options) {
+            return new Promise(function (resolve, reject) {
+                queue.push([url, options, resolve, reject]);
+                next();
+            });
+        };
+    }();
+
+    var url_parse = _require(_dependencyMap[3], 'url-parse');
+
+    var postHeaders = {
+        'content-type': 'application/json;charset=utf-8',
+        'accept': 'application/json'
+    };
+
+    function append_url(server, path) {
+        return server + (server.charAt(server.length - 1) != '/' ? '/' : '') + path;
+    }
+
+    function scheduleAccessTokenRefresh(user, localRealmPath, realmUrl, expirationDate) {
+        var refreshBuffer = 10 * 1000;
+        var timeout = expirationDate - Date.now() - refreshBuffer;
+        setTimeout(function () {
+            return refreshAccessToken(user, localRealmPath, realmUrl);
+        }, timeout);
+    }
+
+    function print_error() {
+        (console.error || console.log).apply(console, arguments);
+    }
+
+    function validateRefresh(user, localRealmPath, response, json) {
+        var session = user._sessionForOnDiskPath(localRealmPath);
+
+        if (!session) {
+            print_error("Unhandled session token refresh error: could not look up session for user " + user.identity + " at path " + localRealmPath);
+            return;
+        }
+
+        var errorHandler = session.config.error;
+
+        if (response.status != 200) {
+            var error = new AuthError(json);
+
+            if (errorHandler) {
+                errorHandler(session, error);
+            } else {
+                print_error("Unhandled session token refresh error for user " + user.identity + " at path " + localRealmPath, error);
+            }
+
+            return;
+        }
+
+        if (session.state === 'invalid') {
+            return;
+        }
+
+        return session;
+    }
+
+    function refreshAdminToken(user, localRealmPath, realmUrl) {
+        var token = user.token;
+        var server = user.server;
+        var parsedRealmUrl = url_parse(realmUrl);
+        var url = append_url(user.server, 'realms/files/' + encodeURIComponent(parsedRealmUrl.pathname));
+        performFetch(url, {
+            method: 'GET',
+            timeout: 10000.0,
+            headers: {
+                Authorization: user.token
+            }
+        }).then(function (response) {
+            if (response.status === 404 || response.status === 503) {
+                return {
+                    response: {
+                        status: 200
+                    },
+                    json: {
+                        path: parsedRealmUrl.pathname,
+                        syncLabel: '_direct'
+                    }
+                };
+            } else {
+                return response.json().then(function (json) {
+                    return {
+                        response: response,
+                        json: json
+                    };
+                });
+            }
+        }).then(function (responseAndJson) {
+            var response = responseAndJson.response;
+            var json = responseAndJson.json;
+            var newUser = user.constructor.adminUser(token, server);
+            var session = validateRefresh(newUser, localRealmPath, response, json);
+
+            if (session) {
+                parsedRealmUrl.set('pathname', json.path);
+
+                session._refreshAccessToken(user.token, parsedRealmUrl.href, json.syncLabel);
+            }
+        }).catch(function (e) {
+            print_error(e);
+            setTimeout(function () {
+                return refreshAccessToken(user, localRealmPath, realmUrl);
+            }, 10 * 1000);
+        });
+    }
+
+    function refreshAccessToken(user, localRealmPath, realmUrl) {
+        if (!user.server) {
+            throw new Error("Server for user must be specified");
+        }
+
+        var parsedRealmUrl = url_parse(realmUrl);
+
+        if (user.isAdminToken) {
+            return refreshAdminToken(user, localRealmPath, realmUrl);
+        }
+
+        var url = append_url(user.server, 'auth');
+        var options = {
+            method: 'POST',
+            body: JSON.stringify({
+                data: user.token,
+                path: parsedRealmUrl.pathname,
+                provider: 'realm',
+                app_id: ''
+            }),
+            headers: postHeaders,
+            timeout: 10000.0
+        };
+        performFetch(url, options).then(function (response) {
+            return response.json().then(function (json) {
+                return {
+                    response: response,
+                    json: json
+                };
+            });
+        }).then(function (responseAndJson) {
+            var response = responseAndJson.response;
+            var json = responseAndJson.json;
+
+            var newUser = user.constructor._getExistingUser(user.server, user.identity);
+
+            if (!newUser) {
+                return;
+            }
+
+            var session = validateRefresh(newUser, localRealmPath, response, json);
+
+            if (!session) {
+                return;
+            }
+
+            var tokenData = json.access_token.token_data;
+            parsedRealmUrl.set('pathname', tokenData.path);
+
+            session._refreshAccessToken(json.access_token.token, parsedRealmUrl.href, tokenData.sync_label);
+
+            var errorHandler = session.config.error;
+
+            if (errorHandler && errorHandler._notifyOnAccessTokenRefreshed) {
+                errorHandler(session, errorHandler._notifyOnAccessTokenRefreshed);
+            }
+
+            var tokenExpirationDate = new Date(tokenData.expires * 1000);
+            scheduleAccessTokenRefresh(newUser, localRealmPath, realmUrl, tokenExpirationDate);
+        }).catch(function (e) {
+            print_error(e);
+            setTimeout(function () {
+                return refreshAccessToken(user, localRealmPath, realmUrl);
+            }, 10 * 1000);
+        });
+    }
+
+    function _authenticate(userConstructor, server, json, callback) {
+        json.app_id = '';
+        var url = append_url(server, 'auth');
+        var options = {
+            method: 'POST',
+            body: JSON.stringify(json),
+            headers: postHeaders,
+            open_timeout: 5000
+        };
+        var promise = performFetch(url, options).then(function (response) {
+            var contentType = response.headers.get('Content-Type');
+
+            if (contentType.indexOf('application/json') === -1) {
+                return response.text().then(function (body) {
+                    throw new AuthError({
+                        title: "Could not authenticate: Realm Object Server didn't respond with valid JSON",
+                        body: body
+                    });
+                });
+            } else if (!response.ok) {
+                return response.json().then(function (body) {
+                    return Promise.reject(new AuthError(body));
+                });
+            } else {
+                return response.json().then(function (body) {
+                    var token = body.refresh_token.token;
+                    var identity = body.refresh_token.token_data.identity;
+                    var isAdmin = body.refresh_token.token_data.is_admin;
+                    return userConstructor.createUser(server, identity, token, false, isAdmin);
+                });
+            }
+        });
+
+        if (callback) {
+            promise.then(function (user) {
+                callback(null, user);
+            }).catch(function (err) {
+                callback(err);
+            });
+        } else {
+            return promise;
+        }
+    }
+
+    function _updateAccount(userConstructor, server, json) {
+        var url = append_url(server, 'auth/password/updateAccount');
+        var options = {
+            method: 'POST',
+            body: JSON.stringify(json),
+            headers: postHeaders,
+            open_timeout: 5000
+        };
+        return performFetch(url, options).then(function (response) {
+            var contentType = response.headers.get('Content-Type');
+
+            if (contentType.indexOf('application/json') === -1) {
+                return response.text().then(function (body) {
+                    throw new AuthError({
+                        title: "Could not update user account: Realm Object Server didn't respond with valid JSON",
+                        body: body
+                    });
+                });
+            }
+
+            if (!response.ok) {
+                return response.json().then(function (body) {
+                    return Promise.reject(new AuthError(body));
+                });
+            }
+        });
+    }
+
+    var staticMethods = {
+        get current() {
+            var allUsers = this.all;
+            var keys = Object.keys(allUsers);
+
+            if (keys.length === 0) {
+                return undefined;
+            } else if (keys.length > 1) {
+                throw new Error("Multiple users are logged in");
+            }
+
+            return allUsers[keys[0]];
+        },
+
+        adminUser: function adminUser(token, server) {
+            checkTypes(arguments, ['string', 'string']);
+            return this._adminUser(server, token);
+        },
+        register: function register(server, username, password, callback) {
+            checkTypes(arguments, ['string', 'string', 'string', 'function']);
+            var json = {
+                provider: 'password',
+                user_info: {
+                    password: password,
+                    register: true
+                },
+                data: username
+            };
+
+            if (callback) {
+                var message = "register(..., callback) is now deprecated in favor of register(): Promise<User>. This function argument will be removed in future versions.";
+                (console.warn || console.log).call(console, message);
+            }
+
+            return _authenticate(this, server, json, callback);
+        },
+        login: function login(server, username, password, callback) {
+            checkTypes(arguments, ['string', 'string', 'string', 'function']);
+            var json = {
+                provider: 'password',
+                user_info: {
+                    password: password,
+                    register: false
+                },
+                data: username
+            };
+
+            if (callback) {
+                var message = "login(..., callback) is now deprecated in favor of login(): Promise<User>. This function argument will be removed in future versions.";
+                (console.warn || console.log).call(console, message);
+            }
+
+            return _authenticate(this, server, json, callback);
+        },
+        registerWithProvider: function registerWithProvider(server, options, callback) {
+            if (arguments.length === 4) {
+                checkTypes(arguments, ['string', 'string', 'string', 'function']);
+                options = {
+                    provider: arguments[1],
+                    providerToken: arguments[2]
+                };
+                callback = arguments[3];
+            } else {
+                checkTypes(arguments, ['string', 'object', 'function']);
+            }
+
+            var json = {
+                provider: options.provider,
+                data: options.providerToken
+            };
+
+            if (options.userInfo) {
+                json.user_info = options.userInfo;
+            }
+
+            if (callback) {
+                var message = "registerWithProvider(..., callback) is now deprecated in favor of registerWithProvider(): Promise<User>. This function argument will be removed in future versions.";
+                (console.warn || console.log).call(console, message);
+            }
+
+            return _authenticate(this, server, json, callback);
+        },
+        authenticate: function authenticate(server, provider, options) {
+            checkTypes(arguments, ['string', 'string', 'object']);
+            var json = {};
+
+            switch (provider.toLowerCase()) {
+                case 'jwt':
+                    json.provider = 'jwt';
+                    json.token = options.token;
+                    break;
+
+                case 'password':
+                    json.provider = 'password';
+                    json.user_info = {
+                        password: options.password
+                    };
+                    json.data = options.username;
+                    break;
+
+                default:
+                    _extends(json, options);
+
+                    json.provider = provider;
+            }
+
+            return _authenticate(this, server, json);
+        },
+        requestPasswordReset: function requestPasswordReset(server, email) {
+            checkTypes(arguments, ['string', 'string']);
+            var json = {
+                provider_id: email,
+                data: {
+                    action: 'reset_password'
+                }
+            };
+            return _updateAccount(this, server, json);
+        },
+        completePasswordReset: function completePasswordReset(server, reset_token, new_password) {
+            checkTypes(arguments, ['string', 'string']);
+            var json = {
+                data: {
+                    action: 'complete_reset',
+                    token: reset_token,
+                    new_password: new_password
+                }
+            };
+            return _updateAccount(this, server, json);
+        },
+        requestEmailConfirmation: function requestEmailConfirmation(server, email) {
+            checkTypes(arguments, ['string', 'string']);
+            var json = {
+                provider_id: email,
+                data: {
+                    action: 'request_email_confirmation'
+                }
+            };
+            return _updateAccount(this, server, json);
+        },
+        confirmEmail: function confirmEmail(server, confirmation_token) {
+            checkTypes(arguments, ['string', 'string']);
+            var json = {
+                data: {
+                    action: 'confirm_email',
+                    token: confirmation_token
+                }
+            };
+            return _updateAccount(this, server, json);
+        },
+        _refreshAccessToken: refreshAccessToken
+    };
+    var instanceMethods = {
+        logout: function logout() {
+            this._logout();
+
+            var url = url_parse(this.server);
+            url.set('pathname', '/auth/revoke');
+            var headers = {
+                Authorization: this.token
+            };
+            var body = JSON.stringify({
+                token: this.token
+            });
+            var options = {
+                method: 'POST',
+                headers: headers,
+                body: body,
+                open_timeout: 5000
+            };
+            performFetch(url.href, options).then(function () {
+                return console.log('User is logged out');
+            }).catch(function (e) {
+                return print_error(e);
+            });
+        },
+        openManagementRealm: function openManagementRealm() {
+            var url = url_parse(this.server);
+
+            if (url.protocol === 'http:') {
+                url.set('protocol', 'realm:');
+            } else if (url.protocol === 'https:') {
+                url.set('protocol', 'realms:');
+            } else {
+                throw new Error("Unexpected user auth url: " + this.server);
+            }
+
+            url.set('pathname', '/~/__management');
+            return new this.constructor._realmConstructor({
+                schema: _require(_dependencyMap[4], './management-schema'),
+                sync: {
+                    user: this,
+                    url: url.href
+                }
+            });
+        },
+        retrieveAccount: function retrieveAccount(provider, provider_id) {
+            checkTypes(arguments, ['string', 'string']);
+            var url = url_parse(this.server);
+            url.set('pathname', "/auth/users/" + provider + "/" + provider_id);
+            var headers = {
+                Authorization: this.token
+            };
+            var options = {
+                method: 'GET',
+                headers: headers,
+                open_timeout: 5000
+            };
+            return performFetch(url.href, options).then(function (response) {
+                if (response.status !== 200) {
+                    return response.json().then(function (body) {
+                        throw new AuthError(body);
+                    });
+                } else {
+                    return response.json();
+                }
+            });
+        },
+        createConfiguration: function createConfiguration(config) {
+            if (config && config.sync) {
+                if (console.warn !== undefined) {
+                    console.warn("'user' property will be overridden by " + this.identity);
+                }
+
+                if (config.sync.partial !== undefined && config.sync.fullSynchronization !== undefined) {
+                    throw new Error("'partial' and 'fullSynchronization' were both set. 'partial' has been deprecated, use only 'fullSynchronization'");
+                }
+            }
+
+            var url = new URL(this.server);
+            var secure = url.protocol === 'https:' ? 's' : '';
+            var port = url.port === undefined ? '9080' : url.port;
+            var realmUrl = "realm" + secure + "://" + url.hostname + ":" + port + "/default";
+            var defaultConfig = {
+                sync: {
+                    user: this,
+                    url: realmUrl
+                }
+            };
+
+            if (!(config && config.sync && config.sync.partial)) {
+                defaultConfig.sync.fullSynchronization = false;
+            }
+
+            var mergedConfig = config === undefined ? defaultConfig : merge(defaultConfig, config);
+            mergedConfig.sync.user = this;
+            return mergedConfig;
+        }
+    };
+
+    _extends(instanceMethods, permissionApis);
+
+    module.exports = {
+        static: staticMethods,
+        instance: instanceMethods
+    };
+},536,[537,538,543,539,542],"node_modules\\realm\\lib\\user-methods.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+    function AuthError(problem) {
+        var error = Error.call(this, problem.title);
+        this.name = 'AuthError';
+        this.message = error.message;
+        this.stack = error.stack;
+
+        _extends(this, problem);
+    }
+
+    AuthError.__proto__ = Error;
+    AuthError.prototype.__proto__ = Error.prototype;
+    exports['AuthError'] = AuthError;
+},537,[],"node_modules\\realm\\lib\\errors.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+  'use strict';
+
+  var url_parse = _require(_dependencyMap[0], 'url-parse');
+
+  var managementSchema = _require(_dependencyMap[1], './management-schema');
+
+  function generateUniqueId() {
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = Math.random() * 16 | 0,
+          v = c == 'x' ? r : r & 0x3 | 0x8;
+      return v.toString(16);
+    });
+    return uuid;
+  }
+
+  var permissionSchema = [{
+    name: 'Permission',
+    properties: {
+      userId: {
+        type: 'string'
+      },
+      path: {
+        type: 'string'
+      },
+      mayRead: {
+        type: 'bool',
+        optional: false
+      },
+      mayWrite: {
+        type: 'bool',
+        optional: false
+      },
+      mayManage: {
+        type: 'bool',
+        optional: false
+      },
+      updatedAt: {
+        type: 'date',
+        optional: false
+      }
+    }
+  }];
+  var specialPurposeRealmsKey = '_specialPurposeRealms';
+
+  function getSpecialPurposeRealm(user, realmName, schema) {
+    if (!user.hasOwnProperty(specialPurposeRealmsKey)) {
+      user[specialPurposeRealmsKey] = {};
+    }
+
+    if (user[specialPurposeRealmsKey].hasOwnProperty(realmName)) {
+      return Promise.resolve(user[specialPurposeRealmsKey][realmName]);
+    }
+
+    var url = url_parse(user.server);
+
+    if (url.protocol === 'http:') {
+      url.set('protocol', 'realm:');
+    } else if (url.protocol === 'https:') {
+      url.set('protocol', 'realms:');
+    } else {
+      throw new Error("Unexpected user auth url: " + user.server);
+    }
+
+    url.set('pathname', "/~/" + realmName);
+    var config = {
+      schema: schema,
+      sync: {
+        user: user,
+        url: url.href,
+        fullSynchronization: true
+      }
+    };
+    var Realm = user.constructor._realmConstructor;
+    return Realm.open(config).then(function (realm) {
+      user[specialPurposeRealmsKey][realmName] = realm;
+      return realm;
+    });
+  }
+
+  function createInManagementRealm(user, modelName, modelInitializer) {
+    return getSpecialPurposeRealm(user, '__management', managementSchema).then(function (managementRealm) {
+      return new Promise(function (resolve, reject) {
+        try {
+          var o = void 0;
+
+          var listener = function listener() {
+            if (!o) {
+              return;
+            }
+
+            var statusCode = o.statusCode;
+
+            if (typeof statusCode === 'number') {
+              managementRealm.removeListener('change', listener);
+
+              if (statusCode === 0) {
+                setTimeout(function () {
+                  return resolve(o);
+                }, 1);
+              } else {
+                var e = new Error(o.statusMessage);
+                e.statusCode = statusCode;
+                e.managementObject = o;
+                setTimeout(function () {
+                  return reject(e);
+                }, 1);
+              }
+            }
+          };
+
+          managementRealm.addListener('change', listener);
+          managementRealm.write(function () {
+            o = managementRealm.create(modelName, modelInitializer);
+          });
+        } catch (e) {
+          reject(e);
+        }
+      });
+    });
+  }
+
+  var accessLevels = ['none', 'read', 'write', 'admin'];
+  var offerAccessLevels = ['read', 'write', 'admin'];
+  module.exports = {
+    getGrantedPermissions: function getGrantedPermissions(recipient) {
+      var _this = this;
+
+      if (recipient && ['currentUser', 'otherUser', 'any'].indexOf(recipient) === -1) {
+        return Promise.reject(new Error("'" + recipient + "' is not a valid recipient type. Must be 'any', 'currentUser' or 'otherUser'."));
+      }
+
+      return getSpecialPurposeRealm(this, '__permission', permissionSchema).then(function (permissionRealm) {
+        var permissions = permissionRealm.objects('Permission').filtered('NOT path ENDSWITH "__permission" AND NOT path ENDSWITH "__management"');
+
+        if (recipient === 'currentUser') {
+          permissions = permissions.filtered('userId = $0', _this.identity);
+        } else if (recipient === 'otherUser') {
+          permissions = permissions.filtered('userId != $0', _this.identity);
+        }
+
+        return permissions;
+      });
+    },
+    applyPermissions: function applyPermissions(condition, realmUrl, accessLevel) {
+      if (!realmUrl) {
+        return Promise.reject(new Error('realmUrl must be specified'));
+      }
+
+      if (accessLevels.indexOf(accessLevel) === -1) {
+        return Promise.reject(new Error("'" + accessLevel + "' is not a valid access level. Must be " + accessLevels.join(', ') + "."));
+      }
+
+      var mayRead = accessLevel === 'read' || accessLevel === 'write' || accessLevel === 'admin';
+      var mayWrite = accessLevel === 'write' || accessLevel === 'admin';
+      var mayManage = accessLevel === 'admin';
+      var permissionChange = {
+        id: generateUniqueId(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        realmUrl: realmUrl,
+        mayRead: mayRead,
+        mayWrite: mayWrite,
+        mayManage: mayManage
+      };
+
+      if (condition.hasOwnProperty('userId')) {
+        permissionChange.userId = condition.userId;
+      } else {
+        permissionChange.userId = '';
+        permissionChange.metadataKey = condition.metadataKey;
+        permissionChange.metadataValue = condition.metadataValue;
+      }
+
+      return createInManagementRealm(this, 'PermissionChange', permissionChange);
+    },
+    offerPermissions: function offerPermissions(realmUrl, accessLevel, expiresAt) {
+      if (!realmUrl) {
+        return Promise.reject(new Error('realmUrl must be specified'));
+      }
+
+      if (offerAccessLevels.indexOf(accessLevel) === -1) {
+        return Promise.reject(new Error("'" + accessLevel + "' is not a valid access level. Must be " + offerAccessLevels.join(', ') + "."));
+      }
+
+      var mayRead = true;
+      var mayWrite = accessLevel === 'write' || accessLevel === 'admin';
+      var mayManage = accessLevel === 'admin';
+      var permissionOffer = {
+        id: generateUniqueId(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        expiresAt: expiresAt,
+        realmUrl: realmUrl,
+        mayRead: mayRead,
+        mayWrite: mayWrite,
+        mayManage: mayManage
+      };
+      return createInManagementRealm(this, 'PermissionOffer', permissionOffer).then(function (appliedOffer) {
+        return appliedOffer.token;
+      });
+    },
+    acceptPermissionOffer: function acceptPermissionOffer(token) {
+      if (!token) {
+        return Promise.reject(new Error('Offer token must be specified'));
+      }
+
+      var permissionOfferResponse = {
+        id: generateUniqueId(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        token: token
+      };
+      return createInManagementRealm(this, 'PermissionOfferResponse', permissionOfferResponse).then(function (appliedReponse) {
+        return appliedReponse.realmUrl;
+      });
+    },
+    invalidatePermissionOffer: function invalidatePermissionOffer(permissionOfferOrToken) {
+      return getSpecialPurposeRealm(this, '__management', managementSchema).then(function (managementRealm) {
+        var permissionOffer = void 0;
+
+        if (typeof permissionOfferOrToken === 'string') {
+          var q = managementRealm.objects('PermissionOffer').filtered('token = $0', permissionOfferOrToken);
+
+          if (q.length === 0) {
+            throw new Error("No permission offers with the given token were found");
+          }
+
+          permissionOffer = q[0];
+        } else {
+          permissionOffer = permissionOfferOrToken;
+        }
+
+        managementRealm.write(function () {
+          permissionOffer.expiresAt = new Date();
+        });
+      });
+    }
+  };
+},538,[539,542],"node_modules\\realm\\lib\\permission-api.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+  'use strict';
+
+  var required = _require(_dependencyMap[0], 'requires-port'),
+      qs = _require(_dependencyMap[1], 'querystringify'),
+      protocolre = /^([a-z][a-z0-9.+-]*:)?(\/\/)?([\S\s]*)/i,
+      slashes = /^[A-Za-z][A-Za-z0-9+-.]*:\/\//;
+
+  var rules = [['#', 'hash'], ['?', 'query'], ['/', 'pathname'], ['@', 'auth', 1], [NaN, 'host', undefined, 1, 1], [/:(\d+)$/, 'port', undefined, 1], [NaN, 'hostname', undefined, 1, 1]];
+  var ignore = {
+    hash: 1,
+    query: 1
+  };
+
+  function lolcation(loc) {
+    var location = global && global.location || {};
+    loc = loc || location;
+    var finaldestination = {},
+        type = typeof loc,
+        key;
+
+    if ('blob:' === loc.protocol) {
+      finaldestination = new URL(unescape(loc.pathname), {});
+    } else if ('string' === type) {
+      finaldestination = new URL(loc, {});
+
+      for (key in ignore) {
+        delete finaldestination[key];
+      }
+    } else if ('object' === type) {
+      for (key in loc) {
+        if (key in ignore) continue;
+        finaldestination[key] = loc[key];
+      }
+
+      if (finaldestination.slashes === undefined) {
+        finaldestination.slashes = slashes.test(loc.href);
+      }
+    }
+
+    return finaldestination;
+  }
+
+  function extractProtocol(address) {
+    var match = protocolre.exec(address);
+    return {
+      protocol: match[1] ? match[1].toLowerCase() : '',
+      slashes: !!match[2],
+      rest: match[3]
+    };
+  }
+
+  function resolve(relative, base) {
+    var path = (base || '/').split('/').slice(0, -1).concat(relative.split('/')),
+        i = path.length,
+        last = path[i - 1],
+        unshift = false,
+        up = 0;
+
+    while (i--) {
+      if (path[i] === '.') {
+        path.splice(i, 1);
+      } else if (path[i] === '..') {
+        path.splice(i, 1);
+        up++;
+      } else if (up) {
+        if (i === 0) unshift = true;
+        path.splice(i, 1);
+        up--;
+      }
+    }
+
+    if (unshift) path.unshift('');
+    if (last === '.' || last === '..') path.push('');
+    return path.join('/');
+  }
+
+  function URL(address, location, parser) {
+    if (!(this instanceof URL)) {
+      return new URL(address, location, parser);
+    }
+
+    var relative,
+        extracted,
+        parse,
+        instruction,
+        index,
+        key,
+        instructions = rules.slice(),
+        type = typeof location,
+        url = this,
+        i = 0;
+
+    if ('object' !== type && 'string' !== type) {
+      parser = location;
+      location = null;
+    }
+
+    if (parser && 'function' !== typeof parser) parser = qs.parse;
+    location = lolcation(location);
+    extracted = extractProtocol(address || '');
+    relative = !extracted.protocol && !extracted.slashes;
+    url.slashes = extracted.slashes || relative && location.slashes;
+    url.protocol = extracted.protocol || location.protocol || '';
+    address = extracted.rest;
+    if (!extracted.slashes) instructions[2] = [/(.*)/, 'pathname'];
+
+    for (; i < instructions.length; i++) {
+      instruction = instructions[i];
+      parse = instruction[0];
+      key = instruction[1];
+
+      if (parse !== parse) {
+        url[key] = address;
+      } else if ('string' === typeof parse) {
+        if (~(index = address.indexOf(parse))) {
+          if ('number' === typeof instruction[2]) {
+            url[key] = address.slice(0, index);
+            address = address.slice(index + instruction[2]);
+          } else {
+            url[key] = address.slice(index);
+            address = address.slice(0, index);
+          }
+        }
+      } else if (index = parse.exec(address)) {
+        url[key] = index[1];
+        address = address.slice(0, index.index);
+      }
+
+      url[key] = url[key] || (relative && instruction[3] ? location[key] || '' : '');
+      if (instruction[4]) url[key] = url[key].toLowerCase();
+    }
+
+    if (parser) url.query = parser(url.query);
+
+    if (relative && location.slashes && url.pathname.charAt(0) !== '/' && (url.pathname !== '' || location.pathname !== '')) {
+      url.pathname = resolve(url.pathname, location.pathname);
+    }
+
+    if (!required(url.port, url.protocol)) {
+      url.host = url.hostname;
+      url.port = '';
+    }
+
+    url.username = url.password = '';
+
+    if (url.auth) {
+      instruction = url.auth.split(':');
+      url.username = instruction[0] || '';
+      url.password = instruction[1] || '';
+    }
+
+    url.origin = url.protocol && url.host && url.protocol !== 'file:' ? url.protocol + '//' + url.host : 'null';
+    url.href = url.toString();
+  }
+
+  function set(part, value, fn) {
+    var url = this;
+
+    switch (part) {
+      case 'query':
+        if ('string' === typeof value && value.length) {
+          value = (fn || qs.parse)(value);
+        }
+
+        url[part] = value;
+        break;
+
+      case 'port':
+        url[part] = value;
+
+        if (!required(value, url.protocol)) {
+          url.host = url.hostname;
+          url[part] = '';
+        } else if (value) {
+          url.host = url.hostname + ':' + value;
+        }
+
+        break;
+
+      case 'hostname':
+        url[part] = value;
+        if (url.port) value += ':' + url.port;
+        url.host = value;
+        break;
+
+      case 'host':
+        url[part] = value;
+
+        if (/:\d+$/.test(value)) {
+          value = value.split(':');
+          url.port = value.pop();
+          url.hostname = value.join(':');
+        } else {
+          url.hostname = value;
+          url.port = '';
+        }
+
+        break;
+
+      case 'protocol':
+        url.protocol = value.toLowerCase();
+        url.slashes = !fn;
+        break;
+
+      case 'pathname':
+      case 'hash':
+        if (value) {
+          var char = part === 'pathname' ? '/' : '#';
+          url[part] = value.charAt(0) !== char ? char + value : value;
+        } else {
+          url[part] = value;
+        }
+
+        break;
+
+      default:
+        url[part] = value;
+    }
+
+    for (var i = 0; i < rules.length; i++) {
+      var ins = rules[i];
+      if (ins[4]) url[ins[1]] = url[ins[1]].toLowerCase();
+    }
+
+    url.origin = url.protocol && url.host && url.protocol !== 'file:' ? url.protocol + '//' + url.host : 'null';
+    url.href = url.toString();
+    return url;
+  }
+
+  function toString(stringify) {
+    if (!stringify || 'function' !== typeof stringify) stringify = qs.stringify;
+    var query,
+        url = this,
+        protocol = url.protocol;
+    if (protocol && protocol.charAt(protocol.length - 1) !== ':') protocol += ':';
+    var result = protocol + (url.slashes ? '//' : '');
+
+    if (url.username) {
+      result += url.username;
+      if (url.password) result += ':' + url.password;
+      result += '@';
+    }
+
+    result += url.host + url.pathname;
+    query = 'object' === typeof url.query ? stringify(url.query) : url.query;
+    if (query) result += '?' !== query.charAt(0) ? '?' + query : query;
+    if (url.hash) result += url.hash;
+    return result;
+  }
+
+  URL.prototype = {
+    set: set,
+    toString: toString
+  };
+  URL.extractProtocol = extractProtocol;
+  URL.location = lolcation;
+  URL.qs = qs;
+  module.exports = URL;
+},539,[540,541],"node_modules\\url-parse\\index.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+  'use strict';
+
+  module.exports = function required(port, protocol) {
+    protocol = protocol.split(':')[0];
+    port = +port;
+    if (!port) return false;
+
+    switch (protocol) {
+      case 'http':
+      case 'ws':
+        return port !== 80;
+
+      case 'https':
+      case 'wss':
+        return port !== 443;
+
+      case 'ftp':
+        return port !== 21;
+
+      case 'gopher':
+        return port !== 70;
+
+      case 'file':
+        return false;
+    }
+
+    return port !== 0;
+  };
+},540,[],"node_modules\\requires-port\\index.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+  'use strict';
+
+  var has = Object.prototype.hasOwnProperty;
+
+  function decode(input) {
+    return decodeURIComponent(input.replace(/\+/g, ' '));
+  }
+
+  function querystring(query) {
+    var parser = /([^=?&]+)=?([^&]*)/g,
+        result = {},
+        part;
+
+    while (part = parser.exec(query)) {
+      var key = decode(part[1]),
+          value = decode(part[2]);
+      if (key in result) continue;
+      result[key] = value;
+    }
+
+    return result;
+  }
+
+  function querystringify(obj, prefix) {
+    prefix = prefix || '';
+    var pairs = [];
+    if ('string' !== typeof prefix) prefix = '?';
+
+    for (var key in obj) {
+      if (has.call(obj, key)) {
+        pairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]));
+      }
+    }
+
+    return pairs.length ? prefix + pairs.join('&') : '';
+  }
+
+  exports.stringify = querystringify;
+  exports.parse = querystring;
+},541,[],"node_modules\\querystringify\\index.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    module.exports = [{
+        name: 'PermissionChange',
+        primaryKey: 'id',
+        properties: {
+            id: {
+                type: 'string'
+            },
+            createdAt: {
+                type: 'date',
+                default: new Date()
+            },
+            updatedAt: {
+                type: 'date',
+                default: new Date()
+            },
+            statusCode: {
+                type: 'int',
+                optional: true
+            },
+            statusMessage: {
+                type: 'string',
+                optional: true
+            },
+            userId: {
+                type: 'string'
+            },
+            realmUrl: {
+                type: 'string'
+            },
+            metadataKey: {
+                type: 'string',
+                optional: true
+            },
+            metadataValue: {
+                type: 'string',
+                optional: true
+            },
+            mayRead: {
+                type: 'bool',
+                optional: true
+            },
+            mayWrite: {
+                type: 'bool',
+                optional: true
+            },
+            mayManage: {
+                type: 'bool',
+                optional: true
+            }
+        }
+    }, {
+        name: 'PermissionOffer',
+        primaryKey: 'id',
+        properties: {
+            id: {
+                type: 'string',
+                optional: false,
+                indexed: true
+            },
+            createdAt: {
+                type: 'date',
+                default: new Date()
+            },
+            updatedAt: {
+                type: 'date',
+                default: new Date()
+            },
+            statusCode: {
+                type: 'int',
+                optional: true
+            },
+            statusMessage: {
+                type: 'string',
+                optional: true
+            },
+            token: {
+                type: 'string',
+                optional: true,
+                indexed: true
+            },
+            realmUrl: {
+                type: 'string'
+            },
+            mayRead: {
+                type: 'bool',
+                default: false
+            },
+            mayWrite: {
+                type: 'bool',
+                default: false
+            },
+            mayManage: {
+                type: 'bool',
+                default: false
+            },
+            expiresAt: {
+                type: 'date',
+                optional: true
+            }
+        }
+    }, {
+        name: 'PermissionOfferResponse',
+        primaryKey: 'id',
+        properties: {
+            id: {
+                type: 'string',
+                optional: false
+            },
+            createdAt: {
+                type: 'date',
+                default: new Date()
+            },
+            updatedAt: {
+                type: 'date',
+                default: new Date()
+            },
+            statusCode: {
+                type: 'int',
+                optional: true
+            },
+            statusMessage: {
+                type: 'string',
+                optional: true
+            },
+            token: {
+                type: 'string'
+            },
+            realmUrl: {
+                type: 'string',
+                optional: true
+            }
+        }
+    }];
+},542,[],"node_modules\\realm\\lib\\management-schema.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+	(function (global, factory) {
+		typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define(factory) : global.deepmerge = factory();
+	})(this, function () {
+		'use strict';
+
+		var isMergeableObject = function isMergeableObject(value) {
+			return isNonNullObject(value) && !isSpecial(value);
+		};
+
+		function isNonNullObject(value) {
+			return !!value && typeof value === 'object';
+		}
+
+		function isSpecial(value) {
+			var stringValue = Object.prototype.toString.call(value);
+			return stringValue === '[object RegExp]' || stringValue === '[object Date]' || isReactElement(value);
+		}
+
+		var canUseSymbol = typeof Symbol === 'function' && (typeof Symbol === "function" ? Symbol.for : "@@for");
+		var REACT_ELEMENT_TYPE = canUseSymbol ? (typeof Symbol === "function" ? Symbol.for : "@@for")('react.element') : 0xeac7;
+
+		function isReactElement(value) {
+			return value.$$typeof === REACT_ELEMENT_TYPE;
+		}
+
+		function emptyTarget(val) {
+			return Array.isArray(val) ? [] : {};
+		}
+
+		function cloneUnlessOtherwiseSpecified(value, options) {
+			return options.clone !== false && options.isMergeableObject(value) ? deepmerge(emptyTarget(value), value, options) : value;
+		}
+
+		function defaultArrayMerge(target, source, options) {
+			return target.concat(source).map(function (element) {
+				return cloneUnlessOtherwiseSpecified(element, options);
+			});
+		}
+
+		function mergeObject(target, source, options) {
+			var destination = {};
+
+			if (options.isMergeableObject(target)) {
+				Object.keys(target).forEach(function (key) {
+					destination[key] = cloneUnlessOtherwiseSpecified(target[key], options);
+				});
+			}
+
+			Object.keys(source).forEach(function (key) {
+				if (!options.isMergeableObject(source[key]) || !target[key]) {
+					destination[key] = cloneUnlessOtherwiseSpecified(source[key], options);
+				} else {
+					destination[key] = deepmerge(target[key], source[key], options);
+				}
+			});
+			return destination;
+		}
+
+		function deepmerge(target, source, options) {
+			options = options || {};
+			options.arrayMerge = options.arrayMerge || defaultArrayMerge;
+			options.isMergeableObject = options.isMergeableObject || isMergeableObject;
+			var sourceIsArray = Array.isArray(source);
+			var targetIsArray = Array.isArray(target);
+			var sourceAndTargetTypesMatch = sourceIsArray === targetIsArray;
+
+			if (!sourceAndTargetTypesMatch) {
+				return cloneUnlessOtherwiseSpecified(source, options);
+			} else if (sourceIsArray) {
+				return options.arrayMerge(target, source, options);
+			} else {
+				return mergeObject(target, source, options);
+			}
+		}
+
+		deepmerge.all = function deepmergeAll(array, options) {
+			if (!Array.isArray(array)) {
+				throw new Error('first argument should be an array');
+			}
+
+			return array.reduce(function (prev, next) {
+				return deepmerge(prev, next, options);
+			}, {});
+		};
+
+		var deepmerge_1 = deepmerge;
+		return deepmerge_1;
+	});
+},543,[],"node_modules\\deepmerge\\dist\\umd.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+    var URL = _require(_dependencyMap[0], 'url-parse');
+
+    var getOwnPropertyDescriptors = Object.getOwnPropertyDescriptors || function (obj) {
+        return Object.getOwnPropertyNames(obj).reduce(function (descriptors, name) {
+            descriptors[name] = Object.getOwnPropertyDescriptor(obj, name);
+            return descriptors;
+        }, {});
+    };
+
+    function setConstructorOnPrototype(klass) {
+        if (klass.prototype.constructor !== klass) {
+            Object.defineProperty(klass.prototype, 'constructor', {
+                value: klass,
+                configurable: true,
+                writable: true
+            });
+        }
+    }
+
+    function waitForDownloadConfig(config) {
+        if (!config) {
+            return {
+                _cache: false
+            };
+        }
+
+        if (typeof config == 'string') {
+            return {
+                path: config,
+                _cache: false
+            };
+        }
+
+        if (typeof config == 'object') {
+            return _extends({}, config, {
+                schema: undefined,
+                schemaVersion: undefined,
+                _cache: false
+            });
+        }
+
+        return config;
+    }
+
+    module.exports = function (realmConstructor) {
+        Object.defineProperties(realmConstructor.Collection.prototype, _require(_dependencyMap[1], './collection-methods'));
+        setConstructorOnPrototype(realmConstructor.Collection);
+        setConstructorOnPrototype(realmConstructor.List);
+        setConstructorOnPrototype(realmConstructor.Results);
+        setConstructorOnPrototype(realmConstructor.Object);
+        Object.defineProperties(realmConstructor, getOwnPropertyDescriptors({
+            open: function open(config) {
+                if (config === undefined) {
+                    config = {};
+                }
+
+                if (!("sync" in config)) {
+                    var _promise = Promise.resolve(new realmConstructor(config));
+
+                    _promise.progress = function (callback) {};
+
+                    return _promise;
+                }
+
+                var syncSession = void 0;
+                var promise = new Promise(function (resolve, reject) {
+                    var realm = new realmConstructor(waitForDownloadConfig(config));
+
+                    realm._waitForDownload(function (session) {
+                        syncSession = session;
+                    }, function (error) {
+                        realm.close();
+
+                        if (error) {
+                            setTimeout(function () {
+                                reject(error);
+                            }, 1);
+                        } else {
+                            try {
+                                var syncedRealm = new realmConstructor(config);
+                                setTimeout(function () {
+                                    resolve(syncedRealm);
+                                }, 1);
+                            } catch (e) {
+                                reject(e);
+                            }
+                        }
+                    });
+                });
+
+                promise.progress = function (callback) {
+                    if (syncSession) {
+                        syncSession.addProgressNotification('download', 'forCurrentlyOutstandingWork', callback);
+                    }
+
+                    return promise;
+                };
+
+                return promise;
+            },
+            openAsync: function openAsync(config, callback, progressCallback) {
+                var message = "Realm.openAsync is now deprecated in favor of Realm.open. This function will be removed in future versions.";
+                (console.warn || console.log).call(console, message);
+                var promise = this.open(config);
+
+                if (progressCallback) {
+                    promise.progress(progressCallback);
+                }
+
+                promise.then(function (realm) {
+                    callback(null, realm);
+                }).catch(function (error) {
+                    callback(error);
+                });
+            }
+        }));
+
+        if (realmConstructor.Sync) {
+            var userMethods = _require(_dependencyMap[2], './user-methods');
+
+            Object.defineProperties(realmConstructor.Sync.User, getOwnPropertyDescriptors(userMethods.static));
+            Object.defineProperties(realmConstructor.Sync.User.prototype, getOwnPropertyDescriptors(userMethods.instance));
+            Object.defineProperty(realmConstructor.Sync.User, '_realmConstructor', {
+                value: realmConstructor
+            });
+            realmConstructor.Sync.AuthError = _require(_dependencyMap[3], './errors').AuthError;
+
+            if (realmConstructor.Sync.removeAllListeners) {
+                process.on('exit', realmConstructor.Sync.removeAllListeners);
+                process.on('SIGINT', function () {
+                    realmConstructor.Sync.removeAllListeners();
+                    process.exit(2);
+                });
+                process.on('uncaughtException', function (e) {
+                    realmConstructor.Sync.removeAllListeners();
+                    console.log(e.stack);
+                    process.exit(99);
+                });
+            }
+
+            setConstructorOnPrototype(realmConstructor.Sync.User);
+            setConstructorOnPrototype(realmConstructor.Sync.Session);
+
+            realmConstructor.automaticSyncConfiguration = function () {
+                var user = void 0;
+
+                if (arguments.length === 0) {
+                    var users = this.Sync.User.all;
+                    var identities = Object.keys(users);
+
+                    if (identities.length === 1) {
+                        user = users[identities[0]];
+                    } else {
+                        new Error("One and only one user should be logged in but found " + users.length + " users.");
+                    }
+                } else if (arguments.length === 1) {
+                    user = arguments[0];
+                } else {
+                    new Error("Zero or one argument expected.");
+                }
+
+                var url = new URL(user.server);
+                var secure = url.protocol === 'https:' ? 's' : '';
+                var port = url.port === undefined ? '9080' : url.port;
+                var realmUrl = "realm" + secure + "://" + url.hostname + ":" + port + "/default";
+                var config = {
+                    sync: {
+                        user: user,
+                        url: realmUrl
+                    }
+                };
+                return config;
+            };
+
+            if (realmConstructor.Sync._setFeatureToken) {
+                realmConstructor.Sync.setFeatureToken = function (featureToken) {
+                    console.log('Realm.Sync.setFeatureToken() is deprecated and you can remove any calls to it.');
+                };
+            }
+
+            realmConstructor.Sync.SubscriptionState = {
+                Error: -1,
+                Creating: 2,
+                Pending: 0,
+                Complete: 1,
+                Invalidated: 3
+            };
+            var permissionsSchema = Object.freeze({
+                Class: function Class() {},
+                Permission: function Permission() {},
+                Realm: function Realm() {},
+                Role: function Role() {},
+                User: function User() {}
+            });
+            permissionsSchema.Permission.schema = Object.freeze({
+                name: '__Permission',
+                properties: {
+                    role: '__Role',
+                    canRead: {
+                        type: 'bool',
+                        default: false
+                    },
+                    canUpdate: {
+                        type: 'bool',
+                        default: false
+                    },
+                    canDelete: {
+                        type: 'bool',
+                        default: false
+                    },
+                    canSetPermissions: {
+                        type: 'bool',
+                        default: false
+                    },
+                    canQuery: {
+                        type: 'bool',
+                        default: false
+                    },
+                    canCreate: {
+                        type: 'bool',
+                        default: false
+                    },
+                    canModifySchema: {
+                        type: 'bool',
+                        default: false
+                    }
+                }
+            });
+            permissionsSchema.User.schema = Object.freeze({
+                name: '__User',
+                primaryKey: 'id',
+                properties: {
+                    id: 'string',
+                    role: '__Role'
+                }
+            });
+            permissionsSchema.Role.schema = Object.freeze({
+                name: '__Role',
+                primaryKey: 'name',
+                properties: {
+                    name: 'string',
+                    members: '__User[]'
+                }
+            });
+            permissionsSchema.Class.schema = Object.freeze({
+                name: '__Class',
+                primaryKey: 'class_name',
+                properties: {
+                    class_name: 'string',
+                    permissions: '__Permission[]'
+                }
+            });
+            permissionsSchema.Realm.schema = Object.freeze({
+                name: '__Realm',
+                primaryKey: 'id',
+                properties: {
+                    id: 'int',
+                    permissions: '__Permission[]'
+                }
+            });
+
+            if (!realmConstructor.Permissions) {
+                Object.defineProperty(realmConstructor, 'Permissions', {
+                    value: permissionsSchema,
+                    configurable: false
+                });
+            }
+        }
+
+        var types = Object.freeze({
+            'BOOL': 'bool',
+            'INT': 'int',
+            'FLOAT': 'float',
+            'DOUBLE': 'double',
+            'STRING': 'string',
+            'DATE': 'date',
+            'DATA': 'data',
+            'OBJECT': 'object',
+            'LIST': 'list'
+        });
+        Object.defineProperty(realmConstructor, 'Types', {
+            get: function get() {
+                if (typeof console != 'undefined') {
+                    var stack = new Error().stack.split("\n").slice(2).join("\n");
+                    var msg = '`Realm.Types` is deprecated! Please specify the type name as lowercase string instead!\n' + stack;
+
+                    if (console.warn != undefined) {
+                        console.warn(msg);
+                    } else {
+                        console.log(msg);
+                    }
+                }
+
+                return types;
+            },
+            configurable: true
+        });
+    };
+},544,[539,545,536,537],"node_modules\\realm\\lib\\extensions.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    var arrayPrototype = Array.prototype;
+    var iteratorPrototype = {};
+    Object.defineProperty(iteratorPrototype, typeof Symbol === "function" ? Symbol.iterator : "@@iterator", {
+        value: function () {
+            return this;
+        }
+    });
+    ['toString', 'toLocaleString', 'concat', 'join', 'slice', 'lastIndexOf', 'every', 'some', 'forEach', 'find', 'findIndex', 'map', 'filter', 'reduce', 'reduceRight'].forEach(function (methodName) {
+        var method = arrayPrototype[methodName];
+
+        if (method) {
+            exports[methodName] = {
+                value: method,
+                configurable: true,
+                writable: true
+            };
+        }
+    });
+    ['entries', 'keys', 'values'].forEach(function (methodName) {
+        var method = function method() {
+            var self = this.snapshot();
+            var index = 0;
+            return Object.create(iteratorPrototype, {
+                next: {
+                    value: function value() {
+                        if (!self || index >= self.length) {
+                            self = null;
+                            return {
+                                done: true,
+                                value: undefined
+                            };
+                        }
+
+                        var value;
+
+                        switch (methodName) {
+                            case 'entries':
+                                value = [index, self[index]];
+                                break;
+
+                            case 'keys':
+                                value = index;
+                                break;
+
+                            default:
+                                value = self[index];
+                        }
+
+                        index++;
+                        return {
+                            done: false,
+                            value: value
+                        };
+                    }
+                }
+            });
+        };
+
+        exports[methodName] = {
+            value: method,
+            configurable: true,
+            writable: true
+        };
+    });
+    exports[typeof Symbol === "function" ? Symbol.iterator : "@@iterator"] = exports.values;
+},545,[],"node_modules\\realm\\lib\\collection-methods.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = {
     get createNavigationContainer() {
@@ -63489,172 +66877,168 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       return _require(_dependencyMap[1], './StateUtils').default;
     },
 
-    get getNavigation() {
-      return _require(_dependencyMap[2], './getNavigation').default;
-    },
-
     get createNavigator() {
-      return _require(_dependencyMap[3], './navigators/createNavigator').default;
+      return _require(_dependencyMap[2], './navigators/createNavigator').default;
     },
 
     get createStackNavigator() {
-      return _require(_dependencyMap[4], './navigators/createStackNavigator').default;
+      return _require(_dependencyMap[3], './navigators/createStackNavigator').default;
     },
 
     get StackNavigator() {
       console.warn('The StackNavigator function name is deprecated, please use createStackNavigator instead');
-      return _require(_dependencyMap[4], './navigators/createStackNavigator').default;
+      return _require(_dependencyMap[3], './navigators/createStackNavigator').default;
     },
 
     get createSwitchNavigator() {
-      return _require(_dependencyMap[5], './navigators/createSwitchNavigator').default;
+      return _require(_dependencyMap[4], './navigators/createSwitchNavigator').default;
     },
 
     get SwitchNavigator() {
       console.warn('The SwitchNavigator function name is deprecated, please use createSwitchNavigator instead');
-      return _require(_dependencyMap[5], './navigators/createSwitchNavigator').default;
+      return _require(_dependencyMap[4], './navigators/createSwitchNavigator').default;
     },
 
     get createDrawerNavigator() {
-      return _require(_dependencyMap[6], 'react-navigation-drawer').createDrawerNavigator;
+      return _require(_dependencyMap[5], 'react-navigation-drawer').createDrawerNavigator;
     },
 
     get DrawerNavigator() {
       console.warn('The DrawerNavigator function name is deprecated, please use createDrawerNavigator instead');
-      return _require(_dependencyMap[6], 'react-navigation-drawer').createDrawerNavigator;
+      return _require(_dependencyMap[5], 'react-navigation-drawer').createDrawerNavigator;
     },
 
     get createTabNavigator() {
       console.warn('createTabNavigator is deprecated. Please use the createBottomTabNavigator or createMaterialTopTabNavigator instead.');
-      return _require(_dependencyMap[7], 'react-navigation-deprecated-tab-navigator').createTabNavigator;
+      return _require(_dependencyMap[6], 'react-navigation-deprecated-tab-navigator').createTabNavigator;
     },
 
     get TabNavigator() {
       console.warn('TabNavigator is deprecated. Please use the createBottomTabNavigator or createMaterialTopTabNavigator instead.');
-      return _require(_dependencyMap[7], 'react-navigation-deprecated-tab-navigator').createTabNavigator;
+      return _require(_dependencyMap[6], 'react-navigation-deprecated-tab-navigator').createTabNavigator;
     },
 
     get createBottomTabNavigator() {
-      return _require(_dependencyMap[8], 'react-navigation-tabs').createBottomTabNavigator;
+      return _require(_dependencyMap[7], 'react-navigation-tabs').createBottomTabNavigator;
     },
 
     get createMaterialTopTabNavigator() {
-      return _require(_dependencyMap[8], 'react-navigation-tabs').createMaterialTopTabNavigator;
+      return _require(_dependencyMap[7], 'react-navigation-tabs').createMaterialTopTabNavigator;
     },
 
     get NavigationActions() {
-      return _require(_dependencyMap[9], './NavigationActions').default;
+      return _require(_dependencyMap[8], './NavigationActions').default;
     },
 
     get StackActions() {
-      return _require(_dependencyMap[10], './routers/StackActions').default;
+      return _require(_dependencyMap[9], './routers/StackActions').default;
     },
 
     get DrawerActions() {
-      return _require(_dependencyMap[6], 'react-navigation-drawer').DrawerActions;
+      return _require(_dependencyMap[5], 'react-navigation-drawer').DrawerActions;
     },
 
     get getNavigationActionCreators() {
-      return _require(_dependencyMap[11], './routers/getNavigationActionCreators').default;
+      return _require(_dependencyMap[10], './routers/getNavigationActionCreators').default;
     },
 
     get StackRouter() {
-      return _require(_dependencyMap[12], './routers/StackRouter').default;
+      return _require(_dependencyMap[11], './routers/StackRouter').default;
     },
 
     get TabRouter() {
-      return _require(_dependencyMap[13], './routers/TabRouter').default;
+      return _require(_dependencyMap[12], './routers/TabRouter').default;
     },
 
     get DrawerRouter() {
-      return _require(_dependencyMap[6], 'react-navigation-drawer').DrawerRouter;
+      return _require(_dependencyMap[5], 'react-navigation-drawer').DrawerRouter;
     },
 
     get SwitchRouter() {
-      return _require(_dependencyMap[14], './routers/SwitchRouter').default;
+      return _require(_dependencyMap[13], './routers/SwitchRouter').default;
     },
 
     get Transitioner() {
-      return _require(_dependencyMap[15], './views/Transitioner').default;
+      return _require(_dependencyMap[14], './views/Transitioner').default;
     },
 
     get StackView() {
-      return _require(_dependencyMap[16], './views/StackView/StackView').default;
+      return _require(_dependencyMap[15], './views/StackView/StackView').default;
     },
 
     get StackViewCard() {
-      return _require(_dependencyMap[17], './views/StackView/StackViewCard').default;
+      return _require(_dependencyMap[16], './views/StackView/StackViewCard').default;
     },
 
     get SafeAreaView() {
-      return _require(_dependencyMap[18], 'react-native-safe-area-view').default;
+      return _require(_dependencyMap[17], 'react-native-safe-area-view').default;
     },
 
     get SceneView() {
-      return _require(_dependencyMap[19], './views/SceneView').default;
+      return _require(_dependencyMap[18], './views/SceneView').default;
     },
 
     get ResourceSavingSceneView() {
-      return _require(_dependencyMap[20], './views/ResourceSavingSceneView').default;
+      return _require(_dependencyMap[19], './views/ResourceSavingSceneView').default;
     },
 
     get Header() {
-      return _require(_dependencyMap[21], './views/Header/Header').default;
+      return _require(_dependencyMap[20], './views/Header/Header').default;
     },
 
     get HeaderTitle() {
-      return _require(_dependencyMap[22], './views/Header/HeaderTitle').default;
+      return _require(_dependencyMap[21], './views/Header/HeaderTitle').default;
     },
 
     get HeaderBackButton() {
-      return _require(_dependencyMap[23], './views/Header/HeaderBackButton').default;
+      return _require(_dependencyMap[22], './views/Header/HeaderBackButton').default;
     },
 
     get DrawerView() {
-      return _require(_dependencyMap[6], 'react-navigation-drawer').DrawerView;
+      return _require(_dependencyMap[5], 'react-navigation-drawer').DrawerView;
     },
 
     get DrawerItems() {
-      return _require(_dependencyMap[6], 'react-navigation-drawer').DrawerNavigatorItems;
+      return _require(_dependencyMap[5], 'react-navigation-drawer').DrawerNavigatorItems;
     },
 
     get DrawerSidebar() {
-      return _require(_dependencyMap[6], 'react-navigation-drawer').DrawerSidebar;
+      return _require(_dependencyMap[5], 'react-navigation-drawer').DrawerSidebar;
     },
 
     get TabView() {
       console.warn('TabView is deprecated. Please use the react-navigation-tabs package instead: https://github.com/react-navigation/react-navigation-tabs');
-      return _require(_dependencyMap[7], 'react-navigation-deprecated-tab-navigator').TabView;
+      return _require(_dependencyMap[6], 'react-navigation-deprecated-tab-navigator').TabView;
     },
 
     get TabBarTop() {
       console.warn('TabBarTop is deprecated. Please use the react-navigation-tabs package instead: https://github.com/react-navigation/react-navigation-tabs');
-      return _require(_dependencyMap[7], 'react-navigation-deprecated-tab-navigator').TabBarTop;
+      return _require(_dependencyMap[6], 'react-navigation-deprecated-tab-navigator').TabBarTop;
     },
 
     get TabBarBottom() {
       console.warn('TabBarBottom is deprecated. Please use the react-navigation-tabs package instead: https://github.com/react-navigation/react-navigation-tabs');
-      return _require(_dependencyMap[7], 'react-navigation-deprecated-tab-navigator').TabBarBottom;
+      return _require(_dependencyMap[6], 'react-navigation-deprecated-tab-navigator').TabBarBottom;
     },
 
     get SwitchView() {
-      return _require(_dependencyMap[24], './views/SwitchView/SwitchView').default;
+      return _require(_dependencyMap[23], './views/SwitchView/SwitchView').default;
     },
 
     get withNavigation() {
-      return _require(_dependencyMap[25], './views/withNavigation').default;
+      return _require(_dependencyMap[24], './views/withNavigation').default;
     },
 
     get withNavigationFocus() {
-      return _require(_dependencyMap[26], './views/withNavigationFocus').default;
+      return _require(_dependencyMap[25], './views/withNavigationFocus').default;
     },
 
     get withOrientation() {
-      return _require(_dependencyMap[27], './views/withOrientation').default;
+      return _require(_dependencyMap[26], './views/withOrientation').default;
     }
 
   };
-},520,[521,532,525,533,534,574,577,587,603,524,554,526,566,625,575,563,536,539,543,555,627,542,545,546,576,628,629,552],"node_modules\\react-navigation\\src\\react-navigation.js");
+},546,[547,558,559,560,600,603,613,629,550,580,552,592,651,601,589,562,565,569,581,653,568,571,572,602,654,655,578],"node_modules\\react-navigation\\src\\react-navigation.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -64148,7 +67532,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
     return (0, _reactLifecyclesCompat.polyfill)(NavigationContainer);
   }
-},521,[118,179,12,522,523,524,525,527,531],"node_modules\\react-navigation\\src\\createNavigationContainer.js");
+},547,[118,179,12,548,549,550,551,553,557],"node_modules\\react-navigation\\src\\createNavigationContainer.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   'use strict';
 
@@ -64253,7 +67637,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }
 
   exports.polyfill = polyfill;
-},522,[],"node_modules\\react-lifecycles-compat\\react-lifecycles-compat.cjs.js");
+},548,[],"node_modules\\react-lifecycles-compat\\react-lifecycles-compat.cjs.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -64265,7 +67649,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   var BackHandler = _reactNative.BackHandler || _reactNative.BackAndroid;
   exports.BackHandler = BackHandler;
   exports.MaskedViewIOS = _reactNative.MaskedViewIOS;
-},523,[12],"node_modules\\react-navigation\\src\\PlatformHelpers.native.js");
+},549,[12],"node_modules\\react-navigation\\src\\PlatformHelpers.native.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -64336,7 +67720,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     navigate: navigate,
     setParams: setParams
   };
-},524,[],"node_modules\\react-navigation\\src\\NavigationActions.js");
+},550,[],"node_modules\\react-navigation\\src\\NavigationActions.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -64406,7 +67790,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     });
     return navigation;
   }
-},525,[526,528],"node_modules\\react-navigation\\src\\getNavigation.js");
+},551,[552,554],"node_modules\\react-navigation\\src\\getNavigation.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -64461,7 +67845,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   };
 
   exports.default = getNavigationActionCreators;
-},526,[524,527],"node_modules\\react-navigation\\src\\routers\\getNavigationActionCreators.js");
+},552,[550,553],"node_modules\\react-navigation\\src\\routers\\getNavigationActionCreators.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   'use strict';
 
@@ -64498,7 +67882,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }
 
   module.exports = invariant;
-},527,[],"node_modules\\react-navigation\\src\\utils\\invariant.js");
+},553,[],"node_modules\\react-navigation\\src\\utils\\invariant.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -64602,7 +67986,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }
 
   exports.default = _getChildNavigation;
-},528,[529,530,527],"node_modules\\react-navigation\\src\\getChildNavigation.js");
+},554,[555,556,553],"node_modules\\react-navigation\\src\\getChildNavigation.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -64748,7 +68132,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       }
     };
   }
-},529,[],"node_modules\\react-navigation\\src\\getChildEventSubscriber.js");
+},555,[],"node_modules\\react-navigation\\src\\getChildEventSubscriber.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -64763,7 +68147,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     var Component = router.getComponentForRouteName(routeName);
     return Component.router;
   }
-},530,[],"node_modules\\react-navigation\\src\\getChildRouter.js");
+},556,[],"node_modules\\react-navigation\\src\\getChildRouter.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -64773,7 +68157,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   function docsUrl(path) {
     return "https://reactnavigation.org/docs/" + path;
   }
-},531,[],"node_modules\\react-navigation\\src\\utils\\docsUrl.js");
+},557,[],"node_modules\\react-navigation\\src\\utils\\docsUrl.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -64894,7 +68278,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     }
   };
   exports.default = StateUtils;
-},532,[527],"node_modules\\react-navigation\\src\\StateUtils.js");
+},558,[553],"node_modules\\react-navigation\\src\\StateUtils.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -65036,7 +68420,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }
 
   exports.default = createNavigator;
-},533,[118,179,522,529],"node_modules\\react-navigation\\src\\navigators\\createNavigator.js");
+},559,[118,179,548,555],"node_modules\\react-navigation\\src\\navigators\\createNavigator.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -65096,7 +68480,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }
 
   exports.default = createStackNavigator;
-},534,[118,521,535,533,536,566],"node_modules\\react-navigation\\src\\navigators\\createStackNavigator.js");
+},560,[118,547,561,559,562,592],"node_modules\\react-navigation\\src\\navigators\\createStackNavigator.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -65212,7 +68596,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       return KeyboardAwareNavigator;
     }(_react3.default.Component), _class.router = Navigator.router, _temp2));
   };
-},535,[118,179,12],"node_modules\\react-navigation\\src\\navigators\\createKeyboardAwareNavigator.js");
+},561,[118,179,12],"node_modules\\react-navigation\\src\\navigators\\createKeyboardAwareNavigator.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -65365,7 +68749,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }, _temp2));
 
   exports.default = StackView;
-},536,[118,179,12,537,563,524,554,560],"node_modules\\react-navigation\\src\\views\\StackView\\StackView.js");
+},562,[118,179,12,563,589,550,580,586],"node_modules\\react-navigation\\src\\views\\StackView\\StackView.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -65971,14 +69355,14 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   exports.default = (0, _withOrientation2.default)(StackViewLayout);
-},537,[118,179,538,12,539,542,524,554,555,552,556,560,562],"node_modules\\react-navigation\\src\\views\\StackView\\StackViewLayout.js");
+},563,[118,179,564,12,565,568,550,580,581,578,582,586,588],"node_modules\\react-navigation\\src\\views\\StackView\\StackViewLayout.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = clamp;
 
   function clamp(value, min, max) {
     return min < max ? value < min ? min : value > max ? max : value : value < max ? max : value > min ? min : value;
   }
-},538,[],"node_modules\\clamp\\index.js");
+},564,[],"node_modules\\clamp\\index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -66081,7 +69465,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   Card = (0, _createPointerEventsContainer2.default)(Card);
   exports.default = Card;
-},539,[118,179,12,540],"node_modules\\react-navigation\\src\\views\\StackView\\StackViewCard.js");
+},565,[118,179,12,566],"node_modules\\react-navigation\\src\\views\\StackView\\StackViewCard.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -66229,7 +69613,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
     return Container;
   }
-},540,[118,179,527,541],"node_modules\\react-navigation\\src\\views\\StackView\\createPointerEventsContainer.js");
+},566,[118,179,553,567],"node_modules\\react-navigation\\src\\views\\StackView\\createPointerEventsContainer.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -66260,7 +69644,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }();
 
   exports.default = AnimatedValueSubscription;
-},541,[12],"node_modules\\react-navigation\\src\\views\\AnimatedValueSubscription.js");
+},567,[12],"node_modules\\react-navigation\\src\\views\\AnimatedValueSubscription.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -66971,7 +70355,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   exports.default = (0, _withOrientation2.default)(Header);
-},542,[118,179,12,523,543,545,546,549,550,552,553],"node_modules\\react-navigation\\src\\views\\Header\\Header.js");
+},568,[118,179,12,549,569,571,572,575,576,578,579],"node_modules\\react-navigation\\src\\views\\Header\\Header.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -67372,7 +70756,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }, _temp2));
 
   exports.default = (0, _withOrientation2.default)(SafeView);
-},543,[118,179,12,544],"node_modules\\react-native-safe-area-view\\index.js");
+},569,[118,179,12,570],"node_modules\\react-native-safe-area-view\\index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -67493,7 +70877,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         height = _ref.height;
     return width > height;
   };
-},544,[118,179,12,498],"node_modules\\react-native-safe-area-view\\withOrientation.js");
+},570,[118,179,12,498],"node_modules\\react-native-safe-area-view\\withOrientation.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -67542,7 +70926,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   exports.default = HeaderTitle;
-},545,[118,12],"node_modules\\react-navigation\\src\\views\\Header\\HeaderTitle.js");
+},571,[118,12],"node_modules\\react-navigation\\src\\views\\Header\\HeaderTitle.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -67763,7 +71147,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   exports.default = HeaderBackButton;
-},546,[118,179,12,547,548],"node_modules\\react-navigation\\src\\views\\Header\\HeaderBackButton.js");
+},572,[118,179,12,573,574],"node_modules\\react-navigation\\src\\views\\Header\\HeaderBackButton.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -67879,7 +71263,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }, _temp));
 
   exports.default = TouchableItem;
-},547,[118,179,12],"node_modules\\react-navigation\\src\\views\\TouchableItem.js");
+},573,[118,179,12],"node_modules\\react-navigation\\src\\views\\TouchableItem.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
@@ -67891,7 +71275,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "name": "back-icon",
     "type": "png"
   });
-},548,[164],"node_modules\\react-navigation\\src\\views\\assets\\back-icon.png");
+},574,[164],"node_modules\\react-navigation\\src\\views\\assets\\back-icon.png");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -68125,7 +71509,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   exports.default = ModularHeaderBackButton;
-},549,[118,179,12,547,548],"node_modules\\react-navigation\\src\\views\\Header\\ModularHeaderBackButton.js");
+},575,[118,179,12,573,574],"node_modules\\react-navigation\\src\\views\\Header\\ModularHeaderBackButton.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -68334,7 +71718,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     forCenter: forCenter,
     forRight: forRight
   };
-},550,[12,551],"node_modules\\react-navigation\\src\\views\\Header\\HeaderStyleInterpolator.js");
+},576,[12,577],"node_modules\\react-navigation\\src\\views\\Header\\HeaderStyleInterpolator.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -68384,7 +71768,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }
 
   exports.default = getSceneIndicesForInterpolationInputRange;
-},551,[],"node_modules\\react-navigation\\src\\utils\\getSceneIndicesForInterpolationInputRange.js");
+},577,[],"node_modules\\react-navigation\\src\\utils\\getSceneIndicesForInterpolationInputRange.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -68503,7 +71887,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         height = _ref.height;
     return width > height;
   };
-},552,[118,179,12,498],"node_modules\\react-navigation\\src\\views\\withOrientation.js");
+},578,[118,179,12,498],"node_modules\\react-navigation\\src\\views\\withOrientation.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
@@ -68515,7 +71899,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "name": "back-icon-mask",
     "type": "png"
   });
-},553,[164],"node_modules\\react-navigation\\src\\views\\assets\\back-icon-mask.png");
+},579,[164],"node_modules\\react-navigation\\src\\views\\assets\\back-icon-mask.png");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -68580,7 +71964,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     replace: replace,
     completeTransition: completeTransition
   };
-},554,[],"node_modules\\react-navigation\\src\\routers\\StackActions.js");
+},580,[],"node_modules\\react-navigation\\src\\routers\\StackActions.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -68672,7 +72056,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }(_react3.default.PureComponent));
 
   exports.default = SceneView;
-},555,[118,179,129,556],"node_modules\\react-navigation\\src\\views\\SceneView.js");
+},581,[118,179,129,582],"node_modules\\react-navigation\\src\\views\\SceneView.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -68696,7 +72080,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   var NavigationContext = (0, _createReactContext2.default)();
   var NavigationProvider = exports.NavigationProvider = NavigationContext.Provider;
   var NavigationConsumer = exports.NavigationConsumer = NavigationContext.Consumer;
-},556,[118,129,557],"node_modules\\react-navigation\\src\\views\\NavigationContext.js");
+},582,[118,129,583],"node_modules\\react-navigation\\src\\views\\NavigationContext.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   'use strict';
 
@@ -68718,7 +72102,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   exports.default = _react2.default.createContext || _implementation2.default;
   module.exports = exports['default'];
-},557,[118,558],"node_modules\\create-react-context\\lib\\index.js");
+},583,[118,584],"node_modules\\create-react-context\\lib\\index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   'use strict';
 
@@ -68941,7 +72325,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   exports.default = createReactContext;
   module.exports = exports['default'];
-},558,[118,129,559,30],"node_modules\\create-react-context\\lib\\implementation.js");
+},584,[118,129,585,30],"node_modules\\create-react-context\\lib\\implementation.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   'use strict';
 
@@ -68950,7 +72334,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = function () {
     return global[key] = (global[key] || 0) + 1;
   };
-},559,[],"node_modules\\gud\\index.js");
+},585,[],"node_modules\\gud\\index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -69050,7 +72434,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     defaultTransitionConfig: defaultTransitionConfig,
     getTransitionConfig: getTransitionConfig
   };
-},560,[12,561,562],"node_modules\\react-navigation\\src\\views\\StackView\\StackViewTransitionConfigs.js");
+},586,[12,587,588],"node_modules\\react-navigation\\src\\views\\StackView\\StackViewTransitionConfigs.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -69219,7 +72603,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     forFadeFromBottomAndroid: forFadeFromBottomAndroid,
     forFade: forFade
   };
-},561,[12,551],"node_modules\\react-navigation\\src\\views\\StackView\\StackViewStyleInterpolator.js");
+},587,[12,577],"node_modules\\react-navigation\\src\\views\\StackView\\StackViewStyleInterpolator.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -69240,7 +72624,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
     return false;
   };
-},562,[12],"node_modules\\react-navigation\\src\\utils\\ReactNativeFeatures.js");
+},588,[12],"node_modules\\react-navigation\\src\\utils\\ReactNativeFeatures.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -69621,7 +73005,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   exports.default = Transitioner;
-},563,[118,179,12,527,564],"node_modules\\react-navigation\\src\\views\\Transitioner.js");
+},589,[118,179,12,553,590],"node_modules\\react-navigation\\src\\views\\Transitioner.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -69799,7 +73183,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
     return scenes;
   }
-},564,[527,565],"node_modules\\react-navigation\\src\\views\\ScenesReducer.js");
+},590,[553,591],"node_modules\\react-navigation\\src\\views\\ScenesReducer.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   'use strict';
 
@@ -69839,7 +73223,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }
 
   module.exports = shallowEqual;
-},565,[],"node_modules\\react-navigation\\src\\utils\\shallowEqual.js");
+},591,[],"node_modules\\react-navigation\\src\\utils\\shallowEqual.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -70500,7 +73884,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       getScreenOptions: (0, _createConfigGetter2.default)(routeConfigs, stackConfig.navigationOptions)
     };
   };
-},566,[567,524,554,569,570,532,572,527,573,526],"node_modules\\react-navigation\\src\\routers\\StackRouter.js");
+},592,[593,550,580,595,596,558,598,553,599,552],"node_modules\\react-navigation\\src\\routers\\StackRouter.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   var isarray = _require(_dependencyMap[0], 'isarray');
 
@@ -70791,12 +74175,12 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
     return stringToRegexp(path, keys, options);
   }
-},567,[568],"node_modules\\path-to-regexp\\index.js");
+},593,[594],"node_modules\\path-to-regexp\\index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = Array.isArray || function (arr) {
     return Object.prototype.toString.call(arr) == '[object Array]';
   };
-},568,[],"node_modules\\path-to-regexp\\node_modules\\isarray\\index.js");
+},594,[],"node_modules\\path-to-regexp\\node_modules\\isarray\\index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -70853,7 +74237,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       return outputConfig;
     };
   };
-},569,[527,570,571],"node_modules\\react-navigation\\src\\routers\\createConfigGetter.js");
+},595,[553,596,597],"node_modules\\react-navigation\\src\\routers\\createConfigGetter.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -70887,7 +74271,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
     return routeConfig;
   }
-},570,[527],"node_modules\\react-navigation\\src\\routers\\getScreenForRouteName.js");
+},596,[553],"node_modules\\react-navigation\\src\\routers\\getScreenForRouteName.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -70919,7 +74303,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       })), ['}']).join('\n'));
     }
   };
-},571,[],"node_modules\\react-navigation\\src\\routers\\validateScreenOptions.js");
+},597,[],"node_modules\\react-navigation\\src\\routers\\validateScreenOptions.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -70957,7 +74341,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }
 
   exports.default = validateRouteConfigMap;
-},572,[527],"node_modules\\react-navigation\\src\\routers\\validateRouteConfigMap.js");
+},598,[553],"node_modules\\react-navigation\\src\\routers\\validateRouteConfigMap.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -70975,7 +74359,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   function generateKey() {
     return uniqueBaseId + "-" + uuidCount++;
   }
-},573,[],"node_modules\\react-navigation\\src\\routers\\KeyGenerator.js");
+},599,[],"node_modules\\react-navigation\\src\\routers\\KeyGenerator.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -71011,7 +74395,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }
 
   exports.default = createSwitchNavigator;
-},574,[118,521,533,575,576],"node_modules\\react-navigation\\src\\navigators\\createSwitchNavigator.js");
+},600,[118,547,559,601,602],"node_modules\\react-navigation\\src\\navigators\\createSwitchNavigator.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -71385,7 +74769,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       getScreenOptions: (0, _createConfigGetter2.default)(routeConfigs, config.navigationOptions)
     };
   };
-},575,[527,570,569,524,554,572,526],"node_modules\\react-navigation\\src\\routers\\SwitchRouter.js");
+},601,[553,596,595,550,580,598,552],"node_modules\\react-navigation\\src\\routers\\SwitchRouter.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -71466,7 +74850,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }(_react3.default.Component));
 
   exports.default = SwitchView;
-},576,[118,179,555],"node_modules\\react-navigation\\src\\views\\SwitchView\\SwitchView.js");
+},602,[118,179,581],"node_modules\\react-navigation\\src\\views\\SwitchView\\SwitchView.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = {
     get createDrawerNavigator() {
@@ -71494,7 +74878,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     }
 
   };
-},577,[578,579,580,585,583,581],"node_modules\\react-navigation-drawer\\dist\\index.js");
+},603,[604,605,606,611,609,607],"node_modules\\react-navigation-drawer\\dist\\index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -71604,7 +74988,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   };
 
   exports.default = DrawerNavigator;
-},578,[118,12,520,579,581,585],"node_modules\\react-navigation-drawer\\dist\\navigators\\createDrawerNavigator.js");
+},604,[118,12,546,605,607,611],"node_modules\\react-navigation-drawer\\dist\\navigators\\createDrawerNavigator.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -71712,7 +75096,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       }
     });
   };
-},579,[520,580],"node_modules\\react-navigation-drawer\\dist\\routers\\DrawerRouter.js");
+},605,[546,606],"node_modules\\react-navigation-drawer\\dist\\routers\\DrawerRouter.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -71750,7 +75134,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     closeDrawer: closeDrawer,
     toggleDrawer: toggleDrawer
   };
-},580,[],"node_modules\\react-navigation-drawer\\dist\\routers\\DrawerActions.js");
+},606,[],"node_modules\\react-navigation-drawer\\dist\\routers\\DrawerActions.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -71952,7 +75336,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }(_react3.default.PureComponent));
 
   exports.default = DrawerView;
-},581,[118,179,12,582,520,583,580],"node_modules\\react-navigation-drawer\\dist\\views\\DrawerView.js");
+},607,[118,179,12,608,546,609,606],"node_modules\\react-navigation-drawer\\dist\\views\\DrawerView.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -71961,7 +75345,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   var _reactNative = _require(_dependencyMap[0], 'react-native');
 
   exports.default = _reactNative.DrawerLayoutAndroid;
-},582,[12],"node_modules\\react-native-drawer-layout-polyfill\\dist\\index.android.js");
+},608,[12],"node_modules\\react-native-drawer-layout-polyfill\\dist\\index.android.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -72144,7 +75528,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       flex: 1
     }
   });
-},583,[118,179,12,520,584],"node_modules\\react-navigation-drawer\\dist\\views\\DrawerSidebar.js");
+},609,[118,179,12,546,610],"node_modules\\react-navigation-drawer\\dist\\views\\DrawerSidebar.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   'use strict';
 
@@ -72181,7 +75565,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }
 
   module.exports = invariant;
-},584,[],"node_modules\\react-navigation-drawer\\dist\\utils\\invariant.js");
+},610,[],"node_modules\\react-navigation-drawer\\dist\\utils\\invariant.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -72343,7 +75727,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   exports.default = DrawerNavigatorItems;
-},585,[118,12,520,586],"node_modules\\react-navigation-drawer\\dist\\views\\DrawerNavigatorItems.js");
+},611,[118,12,546,612],"node_modules\\react-navigation-drawer\\dist\\views\\DrawerNavigatorItems.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -72459,7 +75843,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }, _temp));
 
   exports.default = TouchableItem;
-},586,[118,179,12],"node_modules\\react-navigation-drawer\\dist\\views\\TouchableItem.js");
+},612,[118,179,12],"node_modules\\react-navigation-drawer\\dist\\views\\TouchableItem.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   var _createTabNavigator = _require(_dependencyMap[0], "./createTabNavigator");
 
@@ -72485,7 +75869,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     TabBarBottom: _TabBarBottom2.default,
     TabBarTop: _TabBarTop2.default
   };
-},587,[588,589,602,600],"node_modules\\react-navigation-deprecated-tab-navigator\\src\\index.js");
+},613,[614,615,628,626],"node_modules\\react-navigation-deprecated-tab-navigator\\src\\index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -72547,7 +75931,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     Default: _reactNative.Platform.OS === 'ios' ? Presets.iOSBottomTabs : Presets.AndroidTopTabs
   };
   exports.default = createTabNavigator;
-},588,[118,12,520,589,600,602],"node_modules\\react-navigation-deprecated-tab-navigator\\src\\createTabNavigator.js");
+},614,[118,12,546,615,626,628],"node_modules\\react-navigation-deprecated-tab-navigator\\src\\createTabNavigator.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -72817,7 +76201,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       flex: 1
     }
   });
-},589,[118,179,12,590,520],"node_modules\\react-navigation-deprecated-tab-navigator\\src\\views\\TabView.js");
+},615,[118,179,12,616,546],"node_modules\\react-navigation-deprecated-tab-navigator\\src\\views\\TabView.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = {
     get TabViewAnimated() {
@@ -72849,7 +76233,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     }
 
   };
-},590,[591,595,594,593,596,597,599],"node_modules\\react-native-tab-view\\src\\index.js");
+},616,[617,621,620,619,622,623,625],"node_modules\\react-native-tab-view\\src\\index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -73152,7 +76536,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       flex: 1
     }
   });
-},591,[118,179,129,12,592,593,594,595],"node_modules\\react-native-tab-view\\src\\TabViewAnimated.js");
+},617,[118,179,129,12,618,619,620,621],"node_modules\\react-native-tab-view\\src\\TabViewAnimated.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -73210,7 +76594,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     onAnimationEnd: _propTypes2.default.func,
     children: _propTypes2.default.node.isRequired
   };
-},592,[129,12],"node_modules\\react-native-tab-view\\src\\TabViewPropTypes.js");
+},618,[129,12],"node_modules\\react-native-tab-view\\src\\TabViewPropTypes.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -73428,7 +76812,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       overflow: 'hidden'
     }
   });
-},593,[118,179,12,592],"node_modules\\react-native-tab-view\\src\\TabViewPagerAndroid.js");
+},619,[118,179,12,618],"node_modules\\react-native-tab-view\\src\\TabViewPagerAndroid.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -73666,7 +77050,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       overflow: 'hidden'
     }
   });
-},594,[118,179,12,592],"node_modules\\react-native-tab-view\\src\\TabViewPagerScroll.js");
+},620,[118,179,12,618],"node_modules\\react-native-tab-view\\src\\TabViewPagerScroll.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -73945,7 +77329,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       alignItems: 'stretch'
     }
   });
-},595,[118,179,129,12,592],"node_modules\\react-native-tab-view\\src\\TabViewPagerPan.js");
+},621,[118,179,129,12,618],"node_modules\\react-native-tab-view\\src\\TabViewPagerPan.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -74207,7 +77591,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       alignItems: 'stretch'
     }
   });
-},596,[118,179,129,12,592],"node_modules\\react-native-tab-view\\src\\TabViewPagerExperimental.js");
+},622,[118,179,129,12,618],"node_modules\\react-native-tab-view\\src\\TabViewPagerExperimental.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -74827,7 +78211,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       height: 2
     }
   });
-},597,[118,179,129,12,598,592],"node_modules\\react-native-tab-view\\src\\TabBar.js");
+},623,[118,179,129,12,624,618],"node_modules\\react-native-tab-view\\src\\TabBar.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -74971,7 +78355,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }, _temp2));
 
   exports.default = TouchableItem;
-},598,[118,179,129,12],"node_modules\\react-native-tab-view\\src\\TouchableItem.js");
+},624,[118,179,129,12],"node_modules\\react-native-tab-view\\src\\TouchableItem.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -75057,7 +78441,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       });
     };
   }
-},599,[118,179],"node_modules\\react-native-tab-view\\src\\SceneMap.js");
+},625,[118,179],"node_modules\\react-native-tab-view\\src\\SceneMap.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -75277,7 +78661,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       backgroundColor: 'transparent'
     }
   });
-},600,[118,179,12,590,601],"node_modules\\react-navigation-deprecated-tab-navigator\\src\\views\\TabBarTop.js");
+},626,[118,179,12,616,627],"node_modules\\react-navigation-deprecated-tab-navigator\\src\\views\\TabBarTop.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -75428,7 +78812,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       minWidth: 30
     }
   });
-},601,[118,179,12],"node_modules\\react-navigation-deprecated-tab-navigator\\src\\views\\TabBarIcon.js");
+},627,[118,179,12],"node_modules\\react-navigation-deprecated-tab-navigator\\src\\views\\TabBarIcon.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -75862,7 +79246,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   exports.default = (0, _reactNavigation.withOrientation)(TabBarBottom);
-},602,[118,179,12,520,601],"node_modules\\react-navigation-deprecated-tab-navigator\\src\\views\\TabBarBottom.js");
+},628,[118,179,12,546,627],"node_modules\\react-navigation-deprecated-tab-navigator\\src\\views\\TabBarBottom.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = {
     get createBottomTabNavigator() {
@@ -75886,7 +79270,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     }
 
   };
-},603,[604,612,606,624,605],"node_modules\\react-navigation-tabs\\dist\\index.js");
+},629,[630,638,632,650,631],"node_modules\\react-navigation-tabs\\dist\\index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -76120,7 +79504,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   exports.default = (0, _createTabNavigator2.default)(TabNavigationView);
-},604,[118,179,12,522,605,606,611],"node_modules\\react-navigation-tabs\\dist\\navigators\\createBottomTabNavigator.js");
+},630,[118,179,12,548,631,632,637],"node_modules\\react-navigation-tabs\\dist\\navigators\\createBottomTabNavigator.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -76356,7 +79740,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       return (0, _reactNavigation.createNavigationContainer)(navigator);
     };
   }
-},605,[118,179,520],"node_modules\\react-navigation-tabs\\dist\\utils\\createTabNavigator.js");
+},631,[118,179,546],"node_modules\\react-navigation-tabs\\dist\\utils\\createTabNavigator.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -76735,7 +80119,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   exports.default = (0, _withDimensions2.default)(TabBarBottom);
-},606,[118,179,12,607,609,610],"node_modules\\react-navigation-tabs\\dist\\views\\BottomTabBar.js");
+},632,[118,179,12,633,635,636],"node_modules\\react-navigation-tabs\\dist\\views\\BottomTabBar.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -77132,7 +80516,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }, _temp2));
 
   exports.default = (0, _withOrientation2.default)(SafeView);
-},607,[118,179,12,608],"node_modules\\react-navigation-tabs\\node_modules\\react-native-safe-area-view\\index.js");
+},633,[118,179,12,634],"node_modules\\react-navigation-tabs\\node_modules\\react-native-safe-area-view\\index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -77253,7 +80637,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         height = _ref.height;
     return width > height;
   };
-},608,[118,179,12,498],"node_modules\\react-navigation-tabs\\node_modules\\react-native-safe-area-view\\withOrientation.js");
+},634,[118,179,12,498],"node_modules\\react-navigation-tabs\\node_modules\\react-native-safe-area-view\\withOrientation.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -77383,7 +80767,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       minWidth: 25
     }
   });
-},609,[118,179,12],"node_modules\\react-navigation-tabs\\dist\\views\\CrossFadeIcon.js");
+},635,[118,179,12],"node_modules\\react-navigation-tabs\\dist\\views\\CrossFadeIcon.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -77515,7 +80899,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
     return (0, _hoistNonReactStatics2.default)(EnhancedComponent, WrappedComponent);
   }
-},610,[118,179,12,498],"node_modules\\react-navigation-tabs\\dist\\utils\\withDimensions.js");
+},636,[118,179,12,498],"node_modules\\react-navigation-tabs\\dist\\utils\\withDimensions.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -77634,7 +81018,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       top: FAR_FAR_AWAY
     }
   });
-},611,[118,179,12],"node_modules\\react-navigation-tabs\\dist\\views\\ResourceSavingScene.js");
+},637,[118,179,12],"node_modules\\react-navigation-tabs\\dist\\views\\ResourceSavingScene.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -77873,7 +81257,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }, _temp2));
 
   exports.default = (0, _createTabNavigator2.default)(MaterialTabView);
-},612,[118,179,12,613,605,624,611],"node_modules\\react-navigation-tabs\\dist\\navigators\\createMaterialTopTabNavigator.js");
+},638,[118,179,12,639,631,650,637],"node_modules\\react-navigation-tabs\\dist\\navigators\\createMaterialTopTabNavigator.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -77952,7 +81336,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},613,[614,615,618,621,620,619,622,623],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\index.js");
+},639,[640,641,644,647,646,645,648,649],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -78250,7 +81634,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       flex: 1
     }
   });
-},614,[118,179,129,12,615,618,617],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\TabView.js");
+},640,[118,179,129,12,641,644,643],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\TabView.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -78901,7 +82285,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       height: 2
     }
   });
-},615,[118,179,129,12,616,617],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\TabBar.js");
+},641,[118,179,129,12,642,643],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\TabBar.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -79033,7 +82417,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }, _temp));
 
   exports.default = TouchableItem;
-},616,[118,179,129,12],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\TouchableItem.js");
+},642,[118,179,129,12],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\TouchableItem.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -79090,7 +82474,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     onAnimationEnd: _propTypes2.default.func,
     children: _propTypes2.default.node.isRequired
   };
-},617,[129,12],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\PropTypes.js");
+},643,[129,12],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\PropTypes.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -79115,7 +82499,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }
 
   exports.default = Pager;
-},618,[12,619,620,621],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\PagerDefault.js");
+},644,[12,645,646,647],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\PagerDefault.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -79341,7 +82725,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       overflow: 'hidden'
     }
   });
-},619,[118,179,12,617],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\PagerAndroid.js");
+},645,[118,179,12,643],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\PagerAndroid.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -79587,7 +82971,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       overflow: 'hidden'
     }
   });
-},620,[118,179,12,617],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\PagerScroll.js");
+},646,[118,179,12,643],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\PagerScroll.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -79862,7 +83246,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       alignItems: 'stretch'
     }
   });
-},621,[118,179,129,12,617],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\PagerPan.js");
+},647,[118,179,129,12,643],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\PagerPan.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -80131,7 +83515,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       alignItems: 'stretch'
     }
   });
-},622,[118,179,129,12,617],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\PagerExperimental.js");
+},648,[118,179,129,12,643],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\PagerExperimental.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -80221,7 +83605,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       });
     };
   }
-},623,[118,179],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\SceneMap.js");
+},649,[118,179],"node_modules\\react-navigation-tabs\\node_modules\\react-native-tab-view\\src\\SceneMap.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -80451,7 +83835,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       backgroundColor: 'transparent'
     }
   });
-},624,[118,179,12,613,609],"node_modules\\react-navigation-tabs\\dist\\views\\MaterialTopTabBar.js");
+},650,[118,179,12,639,635],"node_modules\\react-navigation-tabs\\dist\\views\\MaterialTopTabBar.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -80477,7 +83861,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     var switchRouter = (0, _SwitchRouter2.default)(routeConfigs, config);
     return switchRouter;
   };
-},625,[575,626],"node_modules\\react-navigation\\src\\routers\\TabRouter.js");
+},651,[601,652],"node_modules\\react-navigation\\src\\routers\\TabRouter.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -80491,7 +83875,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     obj[key] = defaultValue;
     return obj;
   };
-},626,[],"node_modules\\react-navigation\\src\\utils\\withDefaultValue.js");
+},652,[],"node_modules\\react-navigation\\src\\utils\\withDefaultValue.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -80648,7 +84032,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   exports.default = (0, _reactLifecyclesCompat.polyfill)(ResourceSavingSceneView);
-},627,[118,179,12,129,522,555],"node_modules\\react-navigation\\src\\views\\ResourceSavingSceneView.js");
+},653,[118,179,12,129,548,581],"node_modules\\react-navigation\\src\\views\\ResourceSavingSceneView.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -80759,7 +84143,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
     return (0, _hoistNonReactStatics2.default)(ComponentWithNavigation, Component);
   }
-},628,[118,179,129,498,527,556],"node_modules\\react-navigation\\src\\views\\withNavigation.js");
+},654,[118,179,129,498,553,582],"node_modules\\react-navigation\\src\\views\\withNavigation.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -80885,7 +84269,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
     return (0, _hoistNonReactStatics2.default)((0, _withNavigation2.default)(ComponentWithNavigationFocus), Component);
   }
-},629,[118,179,129,498,527,628],"node_modules\\react-navigation\\src\\views\\withNavigationFocus.js");
+},655,[118,179,129,498,553,654],"node_modules\\react-navigation\\src\\views\\withNavigationFocus.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   'use strict';
 
@@ -80910,7 +84294,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   var thunk = createThunkMiddleware();
   thunk.withExtraArgument = createThunkMiddleware;
   exports['default'] = thunk;
-},630,[],"node_modules\\redux-thunk\\lib\\index.js");
+},656,[],"node_modules\\redux-thunk\\lib\\index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
     Object.defineProperty(exports, "__esModule", {
         value: true
@@ -80952,7 +84336,44 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 return state;
         }
     };
-},631,[516],"src\\redux\\reducers\\postReducer.js");
+},657,[516],"src\\redux\\reducers\\postReducer.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+    var _types = _require(_dependencyMap[0], "../actions/types");
+
+    var initalState = {
+        body: '',
+        errorMessage: ''
+    };
+
+    exports.default = function () {
+        var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initalState;
+        var action = arguments[1];
+
+        switch (action.type) {
+            case _types.FETCHING_DETAILS_REQUEST:
+                return state;
+
+            case _types.FETCHING_DETAILS_SUCCESS:
+                return _extends({}, state, {
+                    body: action.payload
+                });
+
+            case _types.FETCHING_DETAILS_FAILURE:
+                return _extends({}, state, {
+                    errormessage: action.payload
+                });
+
+            default:
+                return state;
+        }
+    };
+},658,[516],"src\\redux\\reducers\\detailReducer.js");
 require(44);
 require(11);
 //# sourceMappingURL=index.map
