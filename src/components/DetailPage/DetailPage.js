@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 import styles from './styles'
 import {connect} from 'react-redux'
-import {fetchDetails, saveDetails} from '../../redux/actions/detailActions'
+import {fetchDetails} from '../../redux/actions/detailActions'
 
 class DetailPage extends Component{
 
@@ -28,7 +28,6 @@ class DetailPage extends Component{
     }
 
     onArticleSave(){
-        this.props.saveDetails(this.props.details.body[0])
     }
 
     render(){
@@ -64,4 +63,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps, {fetchDetails, saveDetails})(DetailPage)
+export default connect(mapStateToProps, {fetchDetails})(DetailPage)
