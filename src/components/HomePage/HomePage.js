@@ -46,8 +46,11 @@ class HomePage extends Component{
     }
 
     componentDidMount(){
-        console.log("Starting fetch")
-        this.props.fetchPosts()
+        if(this.props.session.user) {
+            this.props.navigation.goBack()
+            this.props.fetchPosts()
+        }
+        else this.props.navigation.navigate('Login')
     }
 
     render(){
@@ -72,7 +75,8 @@ class HomePage extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        posts : state.Post
+        posts : state.Post,
+        session : state.Session
     }
 }
 

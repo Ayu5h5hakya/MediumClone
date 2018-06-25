@@ -22,7 +22,6 @@ export const postFailureAction = (error) => {
 
 export default fetchPosts = () => {
     return async dispatch => {
-        console.log("drggdfgager")
         dispatch(fetchPostsAction())
         try{
             let response = await fetch('http://10.10.30.107:3000/data')
