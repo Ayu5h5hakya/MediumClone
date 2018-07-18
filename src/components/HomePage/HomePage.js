@@ -46,28 +46,35 @@ class HomePage extends Component{
     }
 
     componentDidMount(){
-        if(this.props.session.user) {
-            this.props.navigation.goBack()
+        if(!this.props.loggedIn) {
+            this.props.navigation.navigate('Login')
+        } else {
             this.props.fetchPosts()
         }
-        else this.props.navigation.navigate('Login')
     }
 
     render(){
+
+        let content =<Text>You must login to continue</Text>
+        if(this.props.loggedIn) {
+            content = <FlatList
+            data={this.props.posts.posts}
+            renderItem = {this._renderItem}
+            keyExtractor = {this._keyExtractor}
+            refreshControl = {
+                <RefreshControl
+                    refreshing={this.props.posts.isRefreshing}
+                    onRefresh={this._onRefresh}
+                />
+            }
+            showsVerticalScrollIndicator  = {false}
+            showsHorizontalScrollIndicator = {false}
+        />
+        }
         return(
-            <FlatList
-                data={this.props.posts.posts}
-                renderItem = {this._renderItem}
-                keyExtractor = {this._keyExtractor}
-                refreshControl = {
-                    <RefreshControl
-                        refreshing={this.props.posts.isRefreshing}
-                        onRefresh={this._onRefresh}
-                    />
-                }
-                showsVerticalScrollIndicator  = {false}
-                showsHorizontalScrollIndicator = {false}
-            />
+            <View>
+                {content}
+            </View>
         )
     }    
 
@@ -76,7 +83,7 @@ class HomePage extends Component{
 const mapStateToProps = (state) => {
     return {
         posts : state.Post,
-        session : state.Session
+        loggedIn : state.Session.user!=null
     }
 }
 

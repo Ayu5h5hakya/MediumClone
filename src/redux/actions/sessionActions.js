@@ -1,6 +1,8 @@
 import {SESSION_RESTORING, SESSION_LOADING, SESSION_SUCCESS, SESSION_ERROR, SESSION_LOGOUT} from './types'
 import firebase from 'react-native-firebase'
 
+import NavigationService from '../../NavigationService'
+
 const sessionRestoring = () => ({
     type : SESSION_RESTORING
 })
@@ -41,22 +43,26 @@ export const restoreSession = () => {
 
 export const loginUser = (email, password) => {
     return (dispatch) => {
-        console.log("Authenticating....")
-        dispatch(sessionSuccess(user))
-        // dispatch(sessionLoading())
-        // firebase.auth()
-        // .signInAndRetrieveDataWithEmailAndPassword(email, password)
-        // .catch(error => {
-        //     dispatch(sessionError(error.message))
-        // })
-
-        // let unsubscribe = firebase.auth()
-        // .onAuthStateChanged(user => {
-        //     if(user){
-        //         dispatch(sessionSuccess(user))
-        //         unsubscribe()
-        //     }
-        // })
+        if(!(email || password)){
+            dispatch(sessionError('Email or password cannot be empty'))
+        } else {
+            console.log("Authenticating....")
+            dispatch(sessionLoading())
+            firebase.auth()
+            .signInAndRetrieveDataWithEmailAndPassword(email, password)
+            .catch(error => {
+                dispatch(sessionError(error.message))
+            })
+    
+            let unsubscribe = firebase.auth()
+            .onAuthStateChanged(user => {
+                if(user){
+                    dispatch(sessionSuccess(user))
+                    NavigationService.goBack()
+                    unsubscribe()
+                }
+            })
+        }
     }
 }
 

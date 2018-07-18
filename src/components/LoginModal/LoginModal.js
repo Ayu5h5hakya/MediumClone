@@ -56,10 +56,18 @@ class LoginModal extends Component {
             onPress={() => this.onLogin}
             title="Login"
           />
-          {this.state.isLogginIn && <ActivityIndicator size="large"/>}
+          {this.props.loginStatus.error && <Text style={styles.errorText}>Error : {this.props.loginStatus.error}</Text>}
         </View>
       );
     }
   }
 
-  export default connect(null, {loginUser})(LoginModal)
+  const mapStateToProps = state => {
+    return (
+        {
+            loginStatus : state.Session
+        }
+    )
+}
+
+  export default connect(mapStateToProps, {loginUser})(LoginModal)
