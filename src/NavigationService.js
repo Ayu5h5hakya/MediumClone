@@ -11,8 +11,7 @@ const NewStack = createStackNavigator({
   },{
     navigationOptions : {
       title :'Medium'
-    },
-    headerMode : 'none'
+    }
   })
   
   const RootStack = createStackNavigator({
@@ -20,6 +19,7 @@ const NewStack = createStackNavigator({
     Login : LoginModal
   },{
     initialRouteName : 'New',
+    headerMode : 'none'
   })
 
 function setTopLevelNavigator(navigatorRef){

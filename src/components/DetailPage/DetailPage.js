@@ -3,6 +3,7 @@ import {
   Text,
   Button,
   ActivityIndicator,
+  Alert,
   View
 } from 'react-native'
 import styles from './styles'
@@ -28,6 +29,10 @@ class DetailPage extends Component{
     }
 
     onArticleSave(){
+        if(!this.props.loggedIn) this.props.navigation.navigate("Login");
+        else {
+            Alert.alert('Currently logged as ' + this.props.currentUser.email)
+        }
     }
 
     render(){
@@ -42,7 +47,7 @@ class DetailPage extends Component{
             <Text style={styles.viewStyle}>{this.props.details.body[0].views}</Text>
             <Text style={styles.viewStyle}>{this.props.details.body[0].likes}</Text>
             <Button
-                title="Save"
+                title="Comment"
                 onPress={this.onArticleSave}
             />
         </View>
@@ -59,7 +64,9 @@ class DetailPage extends Component{
 
 const mapStateToProps = (state) => {
     return {
-        details : state.Detail
+        details : state.Detail,
+        loggedIn: state.Session.user != null,
+        currentUser : state.Session.user
     }
 }
 

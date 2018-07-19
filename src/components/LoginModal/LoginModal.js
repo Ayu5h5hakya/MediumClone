@@ -53,7 +53,7 @@ class LoginModal extends Component {
                     placeholder="Password"
                 />
           <Button
-            onPress={() => this.onLogin}
+            onPress={this.onLogin}
             title="Login"
           />
           {this.props.loginStatus.error && <Text style={styles.errorText}>Error : {this.props.loginStatus.error}</Text>}
