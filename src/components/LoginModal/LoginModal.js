@@ -1,16 +1,8 @@
 import React, {Component} from 'react'
-import {
-    View,
-    Text,
-    TextInput,
-    Alert,
-    ActivityIndicator,
-    Button
-} from 'react-native'
-import firebase from 'react-native-firebase'
-import { connect } from 'react-redux'
+import {Button, Text, TextInput, View} from 'react-native'
+import {connect} from 'react-redux'
 
-import {loginUser} from '../../redux/actions/sessionActions'
+import {sessionLoading} from '../../redux/actions/sessionActions'
 import styles from './styles'
 
 class LoginModal extends Component {
@@ -27,7 +19,7 @@ class LoginModal extends Component {
     }
 
     onLogin(){
-      this.props.loginUser(this.state.email, this.state.password)
+      this.props.dispatch(sessionLoading(this.state.email, this.state.password))
     }
 
     render() {
@@ -70,4 +62,4 @@ class LoginModal extends Component {
     )
 }
 
-  export default connect(mapStateToProps, {loginUser})(LoginModal)
+  export default connect(mapStateToProps,null)(LoginModal)

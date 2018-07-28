@@ -19,18 +19,3 @@ export const postFailureAction = (error) => {
         errorMessage : error
     }
 }
-
-export default fetchPosts = () => {
-    return async dispatch => {
-        dispatch(fetchPostsAction())
-        try{
-            let response = await fetch('http://10.10.30.134:3000/data')
-            let json = await response.json()
-            console.log(json)
-            dispatch(postSuccessAction(json))
-        }catch(error){
-            console.log(error)
-            dispatch(postFailureAction(error))
-        }
-    }
-}

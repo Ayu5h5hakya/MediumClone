@@ -7,16 +7,18 @@ const sessionRestoring = () => ({
     type : SESSION_RESTORING
 })
 
-const sessionLoading = () => ({
-    type : SESSION_LOADING
+export const sessionLoading = (email, password) => ({
+    type : SESSION_LOADING,
+    email,
+    password
 })
 
-const sessionSuccess = user => ({
+export const sessionSuccess = user => ({
     type : SESSION_SUCCESS,
     payload : user
 })
 
-const sessionError = err => ({
+export const sessionError = err => ({
     type : SESSION_ERROR,
     payload : err
 })

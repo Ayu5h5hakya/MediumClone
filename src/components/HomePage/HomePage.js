@@ -1,17 +1,8 @@
-import React, { Component } from "react";
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  FlatList,
-  RefreshControl,
-  Alert,
-  TouchableOpacity,
-  View
-} from "react-native";
-import { connect } from "react-redux";
+import React, {Component} from "react";
+import {FlatList, RefreshControl, Text, TouchableOpacity, View} from "react-native";
+import {connect} from "react-redux";
 
-import fetchPosts from "../../redux/actions/postActions";
+import {fetchPostsAction} from "../../redux/actions/postActions";
 import styles from "./styles";
 
 class HomePage extends Component {
@@ -34,7 +25,7 @@ class HomePage extends Component {
   _keyExtractor = item => item.title;
 
   _onRefresh() {
-    this.props.fetchPosts();
+    this.props.dispatch(fetchPostsAction());
   }
 
   _onChildClick = child => {
@@ -44,7 +35,8 @@ class HomePage extends Component {
   };
 
   componentDidMount() {
-    this.props.fetchPosts();
+    console.log('Getting the posts')
+    this.props.dispatch(fetchPostsAction());
   }
 
   render() {
@@ -75,5 +67,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { fetchPosts }
+    null
 )(HomePage);

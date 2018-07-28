@@ -8,7 +8,8 @@
       "id": 2,
       "title": "Random musings #0",
       "description": "adsdfasdfdasfsadfasdfeafasdfsdfsdafsdafdkafmdsfasdfasdffeargdvdafgaergergaergadfgadsrgaergrgaervaervaergaergaergaregaegregargdfdaggeargekrlagrer",
-      "comments": []
+      "comments": "sECOND",
+      "like": 30
     },
     {
       "id": 3,
@@ -79,7 +80,14 @@
       "dateCreated": "2018-11-9",
       "author": "Ayush Shakya",
       "views": 3000,
-      "likes": 50000
+      "likes": 50000,
+      "comments": [
+        {
+          "userId": 1002,
+          "postId": 1,
+          "comment": "Thisi s the first comment"
+        }
+      ]
     },
     {
       "id": 2,
@@ -88,7 +96,8 @@
       "dateCreated": "2018-11-9",
       "author": "Ayush Shakya",
       "views": 3000,
-      "likes": 50000
+      "likes": 50000,
+      "comments": []
     }
   ]
 }
